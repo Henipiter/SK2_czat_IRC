@@ -24,7 +24,7 @@ struct user_data{
 };
 struct forum_data{
     int id_users[9];
-    char *username[9];
+    char username[9][64];
     int countUser;
     char* name;
 };
@@ -40,6 +40,9 @@ struct forum_data forums[10];
 void showForum(){
     for(int i=0;i<10;i++){
         printf("%d: %s %d\n", i, forums[i].name, forums[i].countUser); 
+        for(int j=0; j<forums[i].countUser;j++){
+            printf("---%d\n", forums[i].id_users[j]);
+        }
     }
 }
 
@@ -51,6 +54,7 @@ void setup(){
     for( int i=0;i<9;i++){
         users[i].logged = 0;
         getline(&users[i].name, &len, fileUser);
+        
         strtok(users[i].name, "\n"); 
         users[i].index_forum = -1;
     }
@@ -63,7 +67,7 @@ void setup(){
         
         for(int j=0; j<9;j++){
             forums[i].id_users[j]=0;
-            forums[i].username[j] ="w";
+            strcpy(forums[i].username[j], "w");
         }
         
         getline(&forums[i].name, &len, fileForum);
@@ -79,9 +83,10 @@ void leaveForum(int index_user, int cfd){
             forums[users[index_user].index_forum].id_users[forums[users[index_user].index_forum].countUser] = 0;
             
             
-            forums[users[index_user].index_forum].username[j] = forums[users[index_user].index_forum].username[forums[users[index_user].index_forum].countUser];
-            forums[users[index_user].index_forum].username[forums[users[index_user].index_forum].countUser] = "w";
+            strcpy(forums[users[index_user].index_forum].username[j], forums[users[index_user].index_forum].username[forums[users[index_user].index_forum].countUser]);
+            strcpy(forums[users[index_user].index_forum].username[forums[users[index_user].index_forum].countUser],"w");
             
+            forums[users[index_user].index_forum].countUser--;
             
             j=9; 
         }
@@ -157,14 +162,14 @@ void* cthread(void* arg){
     
     while(logged==1){
         countNewLine=0;
+        size =0;
+        memset(buffer,0, strlen(buffer));
         while(countNewLine <2){
             read(c->cfd, buffer, 1);
-            printf("-%c\n", buffer[0]);
             if ( buffer[0] == '\n'){
                 countNewLine++;
             }
             if( countNewLine == 0){
-                printf("dd\n");
                 flag = buffer[0];
             }
             if (countNewLine != 0 && buffer[0] != '\n'){
@@ -173,13 +178,17 @@ void* cthread(void* arg){
             
         }
         countNewLine=0;
+        
+        memset(buffer,0, strlen(buffer));
         while(i < size){
             counter = read(c->cfd, buffer+i, 1024);
-            printf("Bufor: %c %s %d\n", flag, buffer, size);
+            printf("Bufor: %c %s %d %ld\n", flag, buffer, size, strlen(buffer));
             i+= counter;
         }
+        buffer[size] = '\0';
+        printf("Bufor: %c %s %d\n", flag, buffer, size);
+        
         i=0;
-        size=0;
         // flag - typ komunikatu
         //buffer - tresc
         
@@ -201,7 +210,6 @@ void* cthread(void* arg){
                     if(forums[i].name[0] != '-'){
                         if(compare( forums[i].name, buffer)){
                             forums[i].id_users[ forums[i].countUser] = c->cfd;
-                            forums[i].countUser++;
                             //jeżeli użytkownik jest w jakimś forum
                             if(users[index_user].index_forum != -1){
                                 forums[users[index_user].index_forum].countUser--;
@@ -209,16 +217,21 @@ void* cthread(void* arg){
                                 
                                 leaveForum(index_user, c->cfd);
                                 
-                                forums[i].id_users[forums[i].countUser] = c->cfd;
-                                forums[i].username[forums[i].countUser] = users[index_user].name;
+                                
+                                
+                            
+                            
                             }
                             users[index_user].index_forum = i;
+                            printf("AAAAAAA%s\n", forums[i].username[forums[i].countUser]);
+                            printf("%s\n",users[index_user].name);
+                            
+                            strcpy(forums[i].username[forums[i].countUser],users[index_user].name);
+                            
+                            
+                            forums[i].countUser++;
                             i=10;
                             
-                            /*
-                             * TO DO
-                             */
-                            //odczytaj plik forum
                             char* historyMessege;
                             FILE *hist = fopen( historyForum[ users[index_user].index_forum], "rt");
                             int cfdd;
@@ -233,7 +246,7 @@ void* cthread(void* arg){
                                 }
                             }
                             printf("Wyslano\n");
-                            write(cfdd, "\n\n",2); 
+                            write(cfdd, "\n",1); 
                             fclose(hist);
                             
                         }
@@ -241,22 +254,29 @@ void* cthread(void* arg){
                 }
                 
                 showForum();
+                
+                
                 break;
             case '2':
                 printf("Opcja2\n");
                 for(int i=0;i<forums[ users[index_user].index_forum].countUser;i++){
-                    strcat(buffer, "\n");
                     counter = 0;
                     written = 0;
                     int cfdd = forums[ users[index_user].index_forum ].id_users[i];
+                    printf("cfd: %d %d\n", counter, size);
                     while( counter<size){
-                        written = write(cfdd,buffer, size);  
+                    printf("wyslano1 %s\n", buffer);
+                        written = write(cfdd,buffer, size);
                         counter+=written;
+                        printf("%d %d\n", written, counter);
                     }
                     write(cfdd, "\n", 1);
-                    FILE *history = fopen( historyForum[users[index_user].index_forum], "rt");
+                    printf("wyslano\n");
+                    FILE *history = fopen( historyForum[users[index_user].index_forum], "a");
                     fprintf(history, "%s\n", buffer);
                     fclose(history);
+                    
+                    strcpy(buffer, "");
                 }
                 break;
                 
@@ -265,44 +285,51 @@ void* cthread(void* arg){
                 users[index_user].logged =0;
                 logged = 0;
                 leaveForum(index_user, c->cfd);
+                showForum();
                 break;
             case '4':
                 printf("Opcja4\n");
                 for(int i=0;i<10;i++){
                     if(forums[i].name[0] == '-'){
-                        FILE *history = fopen( historyForum[i], "rt");
-                        i=10;
+                        FILE *history = fopen( historyForum[i], "w");
                         strcpy( forums[i].name, buffer);
                         fprintf(history, "%s\n", buffer);
                         fclose(history);
+                        i=10;
                     }
                 }
+                showForum();
+                printf("dodano\n");
                 break;
             case '5':
                 printf("Opcja5\n");
                 for(int i=0;i<10;i++){
+                    printf("< %s %s >\n", forums[i].name, buffer);
                     if(compare( forums[i].name, buffer)){
                         counter = 0;
                         written = 0;
                         FILE *history = fopen( historyForum[i], "w");
                         strcpy( forums[i].name, "-");
                         for(int j=0;j<forums[i].countUser;j++){
-                            int cfdd = forums[i].id_users[j];
+                            /*int cfdd = forums[i].id_users[j];
                             while( counter<15){
                                 written = write(cfdd,"Forum usunieto\n", 15);  
                                 counter+=written;
-                            }
+                            }*/
                             forums[i].id_users[j] = 0;
                         }
                         fclose(history);
-                    }
-                    for(int j=0;j<9;j++){
-                        if( users[j].index_forum == i ){
-                            users[j].index_forum = -1;   
+                        
+                        for(int j=0;j<9;j++){
+                            if( users[j].index_forum == i ){
+                                users[j].index_forum = -1;   
+                            }
                         }
+                        i=10;
                     }
-                    i=10;
                 }
+                showForum();
+                printf("usunieto\n");
                 break;
             case '6':
                 printf("Opcja6\n");
@@ -314,7 +341,9 @@ void* cthread(void* arg){
                 send_to = strtok( buffer, "\t");
                 mess = strtok(NULL, "\t");
                 for(int j=0; j< forums[index_user].countUser;j++){
+                    printf("< %s %s >\n", send_to, forums[index_user].username[j]);
                     if( compare( send_to, forums[index_user].username[j])){
+                        printf("weszet\n");
                         int cfdd = forums[index_user].id_users[j];
                         while( counter<strlen(mess)){
                             written = write(cfdd,mess, strlen(mess));  
@@ -332,7 +361,9 @@ void* cthread(void* arg){
                     counter = 0;
                     written = 0;
                     if( forums[i].name[0] != '-' ){
-                        while( counter<strlen(mess)){
+                        while( counter<strlen(forums[i].name)){
+                            
+                            printf("forum: %s\n", forums[i].name);
                             written = write(c->cfd ,forums[i].name, strlen(forums[i].name));  
                             counter+=written;
                         }
@@ -346,8 +377,8 @@ void* cthread(void* arg){
                 for(int i=0;i<forums[index_user].countUser;i++){
                     counter = 0;
                     written = 0;
-                    while( counter<strlen(mess)){
-                        written = write(c->cfd ,forums[i].name, strlen(forums[i].name));  
+                    while( counter<strlen(forums[index_user].username[i])){
+                        written = write(c->cfd ,forums[index_user].username[i], strlen(forums[index_user].username[i]));  
                         counter+=written;
                     }
                     write(c->cfd ,"\t", 1);
