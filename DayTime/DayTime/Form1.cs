@@ -56,14 +56,14 @@ namespace DayTime
 
         private void setThreadedButton(bool status)
         {
-            if (this.buttonGetDate.InvokeRequired)
+            if (this.loginButton.InvokeRequired)
             {
                 setThreadedButtonCallback buttonCallback = new setThreadedButtonCallback(setThreadedButton);
                 this.obj.Invoke(buttonCallback, status);
             }
             else
             {
-                this.buttonGetDate.Enabled = status;
+                this.loginButton.Enabled = status;
             }
         }
 

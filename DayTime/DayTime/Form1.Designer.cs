@@ -29,12 +29,10 @@ namespace DayTime
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBoxIndex = new System.Windows.Forms.TextBox();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxLogin = new System.Windows.Forms.TextBox();
-            this.buttonGetDate = new System.Windows.Forms.Button();
+            this.loginButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBoxDate = new System.Windows.Forms.TextBox();
@@ -47,12 +45,10 @@ namespace DayTime
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBoxIndex);
             this.groupBox1.Controls.Add(this.textBoxPassword);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBoxLogin);
-            this.groupBox1.Controls.Add(this.buttonGetDate);
+            this.groupBox1.Controls.Add(this.loginButton);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(23, 15);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
@@ -63,16 +59,6 @@ namespace DayTime
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Server Info";
             // 
-            // textBoxIndex
-            // 
-            this.textBoxIndex.Location = new System.Drawing.Point(211, 92);
-            this.textBoxIndex.Margin = new System.Windows.Forms.Padding(4);
-            this.textBoxIndex.Name = "textBoxIndex";
-            this.textBoxIndex.Size = new System.Drawing.Size(132, 22);
-            this.textBoxIndex.TabIndex = 2;
-            this.textBoxIndex.Text = "141298";
-            this.textBoxIndex.TextChanged += new System.EventHandler(this.textBoxPort_TextChanged_1);
-            // 
             // textBoxPassword
             // 
             this.textBoxPassword.Location = new System.Drawing.Point(211, 60);
@@ -82,17 +68,6 @@ namespace DayTime
             this.textBoxPassword.TabIndex = 2;
             this.textBoxPassword.Text = "jeden";
             this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPort_TextChanged_1);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 92);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(45, 17);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Index:";
-            this.label3.Click += new System.EventHandler(this.label3_Click_1);
             // 
             // label2
             // 
@@ -114,16 +89,16 @@ namespace DayTime
             this.textBoxLogin.TabIndex = 1;
             this.textBoxLogin.Text = "1";
             // 
-            // buttonGetDate
+            // loginButton
             // 
-            this.buttonGetDate.Location = new System.Drawing.Point(8, 111);
-            this.buttonGetDate.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonGetDate.Name = "buttonGetDate";
-            this.buttonGetDate.Size = new System.Drawing.Size(100, 28);
-            this.buttonGetDate.TabIndex = 3;
-            this.buttonGetDate.Text = "Run";
-            this.buttonGetDate.UseVisualStyleBackColor = true;
-            this.buttonGetDate.Click += new System.EventHandler(this.buttonGetDate_Click);
+            this.loginButton.Location = new System.Drawing.Point(8, 111);
+            this.loginButton.Margin = new System.Windows.Forms.Padding(4);
+            this.loginButton.Name = "loginButton";
+            this.loginButton.Size = new System.Drawing.Size(100, 28);
+            this.loginButton.TabIndex = 3;
+            this.loginButton.Text = "Login";
+            this.loginButton.UseVisualStyleBackColor = true;
+            this.loginButton.Click += new System.EventHandler(this.buttonGetDate_Click);
             // 
             // label1
             // 
@@ -205,7 +180,7 @@ namespace DayTime
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button buttonGetDate;
+        private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxLogin;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -214,8 +189,6 @@ namespace DayTime
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.TextBox textBoxPassword;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxIndex;
-        private System.Windows.Forms.Label label3;
     }
 }
 
