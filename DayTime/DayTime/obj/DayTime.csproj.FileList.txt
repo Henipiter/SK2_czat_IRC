@@ -1,8 +1,0 @@
-bin\Debug\DayTime.exe
-bin\Debug\DayTime.pdb
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\DayTime.Properties.Resources.resources
-obj\Debug\DayTime.csproj.GenerateResource.Cache
-obj\Debug\DayTime.exe
-obj\Debug\DayTime.pdb
-obj\Debug\DayTime.Form1.resources
