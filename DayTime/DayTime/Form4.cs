@@ -9,24 +9,19 @@ using System.Windows.Forms;
 
 namespace DayTime
 {
-    public partial class Form2 : Form
+    public partial class Form4 : Form
     {
-        public Form2()
+        public Form4()
         {
             InitializeComponent();
         }
 
-        private void ForumRefreshButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxLogin_TextChanged(object sender, EventArgs e)
         {
 
         }

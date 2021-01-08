@@ -129,7 +129,7 @@ namespace DayTime
                 Password = this.textBoxPassword.Text.ToString();
                 mess =Login+"\n"+Password+"\n";
                 Buf = Encoding.ASCII.GetBytes(mess);
-                
+                int g = 8;
                 socketFd.Send(Buf, Buf.Length, 0);
                 setThreadedButton(true);
                 /* begin receiving the data */
