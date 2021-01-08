@@ -41,14 +41,15 @@ namespace DayTime
             this.AddBox.Controls.Add(this.NameBox);
             this.AddBox.Controls.Add(this.AddButton);
             this.AddBox.Controls.Add(this.ForumNameLabel);
-            this.AddBox.Location = new System.Drawing.Point(13, 13);
+            this.AddBox.Location = new System.Drawing.Point(13, 7);
             this.AddBox.Margin = new System.Windows.Forms.Padding(4);
             this.AddBox.Name = "AddBox";
             this.AddBox.Padding = new System.Windows.Forms.Padding(4);
-            this.AddBox.Size = new System.Drawing.Size(445, 109);
+            this.AddBox.Size = new System.Drawing.Size(445, 115);
             this.AddBox.TabIndex = 1;
             this.AddBox.TabStop = false;
             this.AddBox.Text = "Add forum";
+            this.AddBox.Enter += new System.EventHandler(this.AddBox_Enter);
             // 
             // NameBox
             // 
