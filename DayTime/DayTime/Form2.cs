@@ -15,6 +15,7 @@ namespace DayTime
     public partial class Form2 : Form
     {
         private Form obj;
+        private Form1 mainForm;
         private Socket fd;
         private IPEndPoint endPoint = null;
         delegate void setThreadedtextBox3UsernameCallback(String text);
@@ -27,12 +28,13 @@ namespace DayTime
         delegate void setThreadedForumAddButtonCallback(bool status);
         delegate void setThreadedForumDeleteButtonCallback(bool status);
         delegate void setThreadedUserWriteButtonCallback(bool status);
-        public Form2(Socket socketFd,string username, IPEndPoint end)
+        public Form2(Socket socketFd,string username, IPEndPoint end, Form formm)
         {
             InitializeComponent();
             this.obj = this;
             this.fd = socketFd;
             this.endPoint = end;
+            this.mainForm = formm as Form1;
             this.setThreadedtextBox3Username(username);
             
             //receive(fd);
@@ -200,29 +202,19 @@ namespace DayTime
                     MessageBox.Show("jjj" + a+"j");
                     switch (a[0])
                         {
-                            case '1':
-                                setThreadedChatbox2(a.Substring(1));
-                                break;
                             case '2':
                                 setThreadedChatbox1(a.Substring(1));
-                                string temp;
-                                string forumn=null;
-                                temp = a.Substring(1);
-                                for (int i = 0; i < temp.Length; i++) 
-                                {
-                                    if (temp[i] == '\n')
-                                    {
-                                        forumn += temp[i];
-                                    }
-                                    else 
-                                    {
-                                    i = temp.Length;
-                                    }
-                                }
-                                this.setThreadedtextBox4Forumname(forumn); //z tego substringa
                                 break;
+                            case '1':
+                                setThreadedChatbox1(a.Substring(1));
+                                this.setThreadedtextBox4Forumname(a.Substring(1));
+                            break;
                             case '3':
-                                this.Close();
+                                socketFd.Shutdown(SocketShutdown.Both);
+                                socketFd.Close();
+                                this.mainForm.Show();
+                                this.Close(); 
+                                
                                 break;
                             case '4':
 
@@ -318,7 +310,7 @@ namespace DayTime
             state.m_SocketFd = fd;
             state.msg = this.textBox2.Text.ToString();
             state.flag = 2;
-
+            this.textBox2.Text = null;
             byte[] Buf;
             string mess;
             mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
@@ -371,6 +363,7 @@ namespace DayTime
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
             fd.Send(Buf, Buf.Length, 0);
+
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -408,6 +401,7 @@ namespace DayTime
         private void ForumChangeButton_Click(object sender, EventArgs e)
         {
             Form4 frm = new Form4(fd, endPoint, 1);
+            this.textBox1.Text = null;
             frm.Show();
         }
 

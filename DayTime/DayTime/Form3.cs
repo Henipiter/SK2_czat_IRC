@@ -58,7 +58,7 @@ namespace DayTime
             state.m_SocketFd = fd;
             string uname= this.UsernameBox.Text.ToString();
             string pmsg= this.MessageBox1.Text.ToString();
-            state.msg = uname + "/t" + pmsg;
+            state.msg = uname + "\t" + pmsg;
             state.flag = 6;
             string mess;
             byte[] Buf;
