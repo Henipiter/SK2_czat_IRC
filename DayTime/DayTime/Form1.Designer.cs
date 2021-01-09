@@ -32,7 +32,7 @@ namespace DayTime
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxLogin = new System.Windows.Forms.TextBox();
-            this.buttonLogin = new System.Windows.Forms.Button();
+            this.loginButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBoxDate = new System.Windows.Forms.TextBox();
@@ -48,7 +48,7 @@ namespace DayTime
             this.groupBox1.Controls.Add(this.textBoxPassword);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBoxLogin);
-            this.groupBox1.Controls.Add(this.buttonLogin);
+            this.groupBox1.Controls.Add(this.loginButton);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(23, 15);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
@@ -89,16 +89,16 @@ namespace DayTime
             this.textBoxLogin.TabIndex = 1;
             this.textBoxLogin.Text = "1";
             // 
-            // buttonLogin
+            // loginButton
             // 
-            this.buttonLogin.Location = new System.Drawing.Point(8, 111);
-            this.buttonLogin.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonLogin.Name = "buttonLogin";
-            this.buttonLogin.Size = new System.Drawing.Size(100, 28);
-            this.buttonLogin.TabIndex = 3;
-            this.buttonLogin.Text = "Login";
-            this.buttonLogin.UseVisualStyleBackColor = true;
-            this.buttonLogin.Click += new System.EventHandler(this.ButtonGetDate_Click);
+            this.loginButton.Location = new System.Drawing.Point(8, 111);
+            this.loginButton.Margin = new System.Windows.Forms.Padding(4);
+            this.loginButton.Name = "loginButton";
+            this.loginButton.Size = new System.Drawing.Size(100, 28);
+            this.loginButton.TabIndex = 3;
+            this.loginButton.Text = "Login";
+            this.loginButton.UseVisualStyleBackColor = true;
+            this.loginButton.Click += new System.EventHandler(this.buttonGetDate_Click);
             // 
             // label1
             // 
@@ -134,7 +134,6 @@ namespace DayTime
             this.textBoxDate.Size = new System.Drawing.Size(461, 23);
             this.textBoxDate.TabIndex = 0;
             this.textBoxDate.TabStop = false;
-            this.textBoxDate.TextChanged += new System.EventHandler(this.textBoxDate_TextChanged);
             // 
             // statusStrip
             // 
@@ -181,7 +180,7 @@ namespace DayTime
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button buttonLogin;
+        private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxLogin;
         private System.Windows.Forms.GroupBox groupBox2;

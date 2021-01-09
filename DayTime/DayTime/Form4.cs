@@ -15,7 +15,7 @@ namespace DayTime
         {
             InitializeComponent();
             this.AddBox.Text = name + " forum";
-            this.AddButton.Text = name
+            this.AddButton.Text = name;
 
         }
 

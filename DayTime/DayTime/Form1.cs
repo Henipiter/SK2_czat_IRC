@@ -56,14 +56,14 @@ namespace DayTime
 
         private void setThreadedButton(bool status)
         {
-            if (this.buttonLogin.InvokeRequired)
+            if (this.loginButton.InvokeRequired)
             {
                 setThreadedButtonCallback buttonCallback = new setThreadedButtonCallback(setThreadedButton);
                 this.obj.Invoke(buttonCallback, status);
             }
             else
             {
-                this.buttonLogin.Enabled = status;
+                this.loginButton.Enabled = status;
             }
         }
 
@@ -95,8 +95,7 @@ namespace DayTime
                         setThreadedButton(true);
 
                         /* shutdown and close socket */
-                        socketFd.Shutdown(SocketShutdown.Both);
-                        socketFd.Close();
+                        
                     }
                 }
             }
@@ -129,11 +128,15 @@ namespace DayTime
                 Password = this.textBoxPassword.Text.ToString();
                 mess =Login+"\n"+Password+"\n";
                 Buf = Encoding.ASCII.GetBytes(mess);
-                int g = 8;
+                
                 socketFd.Send(Buf, Buf.Length, 0);
                 setThreadedButton(true);
                 /* begin receiving the data */
+                
                 socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback), state);
+                
+
+
             }
             catch (Exception exc)
             {
@@ -158,10 +161,11 @@ namespace DayTime
 
                 /* create a socket */
                 socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+                
                 /* remote endpoint for the socket */
                 endPoint = new IPEndPoint(addresses[0], 1234);
-
+                Form2 frm = new Form2(socketFd, "ssss", endPoint);
+                frm.Show();
                 setThreadedStatusLabel("Wait! Connecting...");
 
                 /* connect to the server */
@@ -177,7 +181,7 @@ namespace DayTime
             }
         }
 
-        private void ButtonGetDate_Click(object sender, EventArgs e)
+        private void buttonGetDate_Click(object sender, EventArgs e)
         {
             try
             {
@@ -185,12 +189,10 @@ namespace DayTime
                 setThreadedTextBox("");
                 setThreadedStatusLabel("Wait! DNS query...");
                 /* get DNS host information */
-                 Dns.BeginGetHostByName("192.168.1.14", new AsyncCallback(GetHostEntryCallback), null);
-                
-                
-                Form2 frm = new Form2();
-                frm.Show();
+                Dns.BeginGetHostByName("192.168.1.14", new AsyncCallback(GetHostEntryCallback), null);
 
+                this.Hide();
+                
 
 
 
@@ -242,11 +244,6 @@ namespace DayTime
         {
 
         }
-
-        private void textBoxDate_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 
     public class SocketStateObject
@@ -255,6 +252,7 @@ namespace DayTime
         public byte[] m_DataBuf = new byte[BUF_SIZE];
         public StringBuilder m_StringBuilder = new StringBuilder();
         public Socket m_SocketFd = null;
+  
     }
 
 

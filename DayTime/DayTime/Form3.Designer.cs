@@ -30,7 +30,7 @@ namespace DayTime
         private void InitializeComponent()
         {
             this.PrivateMessageBox = new System.Windows.Forms.GroupBox();
-            this.MessageBox = new System.Windows.Forms.TextBox();
+            this.MessageBox1 = new System.Windows.Forms.TextBox();
             this.MessageLabel = new System.Windows.Forms.Label();
             this.UsernameBox = new System.Windows.Forms.TextBox();
             this.sendButton = new System.Windows.Forms.Button();
@@ -40,76 +40,75 @@ namespace DayTime
             // 
             // PrivateMessageBox
             // 
-            this.PrivateMessageBox.Controls.Add(this.MessageBox);
+            this.PrivateMessageBox.Controls.Add(this.MessageBox1);
             this.PrivateMessageBox.Controls.Add(this.MessageLabel);
             this.PrivateMessageBox.Controls.Add(this.UsernameBox);
             this.PrivateMessageBox.Controls.Add(this.sendButton);
             this.PrivateMessageBox.Controls.Add(this.UsernameLabel);
-            this.PrivateMessageBox.Location = new System.Drawing.Point(13, 13);
-            this.PrivateMessageBox.Margin = new System.Windows.Forms.Padding(4);
+            this.PrivateMessageBox.Location = new System.Drawing.Point(10, 11);
             this.PrivateMessageBox.Name = "PrivateMessageBox";
-            this.PrivateMessageBox.Padding = new System.Windows.Forms.Padding(4);
-            this.PrivateMessageBox.Size = new System.Drawing.Size(483, 205);
+            this.PrivateMessageBox.Size = new System.Drawing.Size(362, 167);
             this.PrivateMessageBox.TabIndex = 1;
             this.PrivateMessageBox.TabStop = false;
             this.PrivateMessageBox.Text = "Private Message";
+            this.PrivateMessageBox.Enter += new System.EventHandler(this.PrivateMessageBox_Enter);
             // 
-            // MessageBox
+            // MessageBox1
             // 
-            this.MessageBox.Location = new System.Drawing.Point(124, 60);
-            this.MessageBox.Margin = new System.Windows.Forms.Padding(4);
-            this.MessageBox.Multiline = true;
-            this.MessageBox.Name = "MessageBox";
-            this.MessageBox.Size = new System.Drawing.Size(350, 101);
-            this.MessageBox.TabIndex = 2;
-            this.MessageBox.Text = "Hello";
+            this.MessageBox1.Location = new System.Drawing.Point(93, 49);
+            this.MessageBox1.Multiline = true;
+            this.MessageBox1.Name = "MessageBox1";
+            this.MessageBox1.Size = new System.Drawing.Size(264, 83);
+            this.MessageBox1.TabIndex = 2;
+            this.MessageBox1.Text = "Hello";
+            this.MessageBox1.TextChanged += new System.EventHandler(this.MessageBox_TextChanged);
             // 
             // MessageLabel
             // 
             this.MessageLabel.AutoSize = true;
-            this.MessageLabel.Location = new System.Drawing.Point(8, 65);
-            this.MessageLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.MessageLabel.Location = new System.Drawing.Point(6, 53);
             this.MessageLabel.Name = "MessageLabel";
-            this.MessageLabel.Size = new System.Drawing.Size(69, 17);
+            this.MessageLabel.Size = new System.Drawing.Size(53, 13);
             this.MessageLabel.TabIndex = 0;
             this.MessageLabel.Text = "Message:";
+            this.MessageLabel.Click += new System.EventHandler(this.MessageLabel_Click);
             // 
             // UsernameBox
             // 
-            this.UsernameBox.Location = new System.Drawing.Point(124, 23);
-            this.UsernameBox.Margin = new System.Windows.Forms.Padding(4);
+            this.UsernameBox.Location = new System.Drawing.Point(93, 19);
             this.UsernameBox.Name = "UsernameBox";
-            this.UsernameBox.Size = new System.Drawing.Size(350, 22);
+            this.UsernameBox.Size = new System.Drawing.Size(264, 20);
             this.UsernameBox.TabIndex = 1;
             this.UsernameBox.Text = "1";
+            this.UsernameBox.TextChanged += new System.EventHandler(this.UsernameBox_TextChanged);
             // 
             // sendButton
             // 
-            this.sendButton.Location = new System.Drawing.Point(186, 169);
-            this.sendButton.Margin = new System.Windows.Forms.Padding(4);
+            this.sendButton.Location = new System.Drawing.Point(140, 137);
             this.sendButton.Name = "sendButton";
-            this.sendButton.Size = new System.Drawing.Size(100, 28);
+            this.sendButton.Size = new System.Drawing.Size(75, 23);
             this.sendButton.TabIndex = 3;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
+            this.sendButton.Click += new System.EventHandler(this.sendButton_Click);
             // 
             // UsernameLabel
             // 
             this.UsernameLabel.AutoSize = true;
-            this.UsernameLabel.Location = new System.Drawing.Point(8, 28);
-            this.UsernameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.UsernameLabel.Location = new System.Drawing.Point(6, 23);
             this.UsernameLabel.Name = "UsernameLabel";
-            this.UsernameLabel.Size = new System.Drawing.Size(77, 17);
+            this.UsernameLabel.Size = new System.Drawing.Size(58, 13);
             this.UsernameLabel.TabIndex = 0;
             this.UsernameLabel.Text = "Username:";
             this.UsernameLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // Form3
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(505, 228);
+            this.ClientSize = new System.Drawing.Size(379, 185);
             this.Controls.Add(this.PrivateMessageBox);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form3";
             this.Text = "Form3";
             this.PrivateMessageBox.ResumeLayout(false);
@@ -121,7 +120,7 @@ namespace DayTime
         #endregion
 
         private System.Windows.Forms.GroupBox PrivateMessageBox;
-        private System.Windows.Forms.TextBox MessageBox;
+        private System.Windows.Forms.TextBox MessageBox1;
         private System.Windows.Forms.Label MessageLabel;
         private System.Windows.Forms.TextBox UsernameBox;
         private System.Windows.Forms.Button sendButton;

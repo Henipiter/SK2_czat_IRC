@@ -15,7 +15,8 @@ C:\Users\Henryk\Downloads\DayTime2\DayTime\DayTime\obj\Debug\DayTime.csproj.Gene
 C:\Users\Henryk\Downloads\DayTime2\DayTime\DayTime\obj\Debug\DayTime.csproj.CoreCompileInputs.cache
 C:\Users\Henryk\Downloads\DayTime2\DayTime\DayTime\obj\Debug\DayTime.exe
 C:\Users\Henryk\Downloads\DayTime2\DayTime\DayTime\obj\Debug\DayTime.pdb
-C:\Users\Henryk\Downloads\DayTime2\DayTime\DayTime\obj\Debug\DayTime.Form2.resources
+C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\bin\Debug\DayTime.exe
+C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\bin\Debug\DayTime.pdb
 C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.csprojAssemblyReference.cache
 C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form1.resources
 C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form2.resources
@@ -24,3 +25,25 @@ C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\ob
 C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.csproj.CoreCompileInputs.cache
 C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.exe
 C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.pdb
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\obj\Debug\DayTime.csprojAssemblyReference.cache
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\obj\Debug\DayTime.Form1.resources
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\obj\Debug\DayTime.Form2.resources
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\obj\Debug\DayTime.Properties.Resources.resources
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\obj\Debug\DayTime.csproj.GenerateResource.cache
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\obj\Debug\DayTime.exe
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\obj\Debug\DayTime.pdb
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\bin\Debug\DayTime.exe
+C:\Users\micha\Desktop\Nowy folder (3)\SKprojekt-main\DayTime\DayTime\bin\Debug\DayTime.pdb
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.csprojAssemblyReference.cache
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.Form1.resources
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.Form2.resources
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.Form3.resources
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.Form4.resources
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.Properties.Resources.resources
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.csproj.GenerateResource.cache
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.csproj.CoreCompileInputs.cache
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.exe
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.pdb
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\bin\Debug\DayTime.exe
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\bin\Debug\DayTime.pdb
+C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.Form5.resources
