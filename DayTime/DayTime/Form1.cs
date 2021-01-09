@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 /*
  * $Id: Form1.cs,v 1.1 2006/10/24 19:32:59 mkalewski Exp $
@@ -17,6 +18,8 @@ namespace DayTime
     public partial class Form1 : Form
     {
         private Form obj;
+        private Socket fd;
+        private IPEndPoint endPoint = null;
         delegate void setThreadedTextBoxCallback(String text);
         delegate void setThreadedStatusLabelCallback(String text);
         delegate void setThreadedButtonCallback(bool status);
@@ -25,6 +28,7 @@ namespace DayTime
         {
             InitializeComponent();
             this.obj = this;
+            
         }
 
         private void setThreadedTextBox(String text)
@@ -106,7 +110,64 @@ namespace DayTime
                 setThreadedButton(true);
             }
         }
+        string ReceiveMess(SocketStateObject state)
+        {
+            var buffer = new List<byte>();
+            byte[] current;
+            while (true)
+            {
+                current = new byte[1];
+                int counter = this.fd.Receive(current, current.Length, SocketFlags.None);
 
+                if (current[0] == 10)
+                {
+                    break;
+                }
+
+                buffer.Add(current[0]);
+
+            }
+            var w = buffer.ToArray();
+            var ww = w.ToString();
+            return Encoding.Default.GetString(buffer.ToArray());
+        }
+        public void StartReceiveMess()
+        {
+            SocketStateObject state = new SocketStateObject();
+            state.m_SocketFd = fd;
+            string mes;
+            int i = 0;
+            while (true)
+            {
+                i++;
+                MessageBox.Show("enedeu");
+                mes = ReceiveMess(state);
+                MessageBox.Show("dwadwa " + mes);
+                //fd.BeginReceive(state.m_DataBuf, 0, SocketStateObject3.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback3), state);
+                if (mes.Length >= 1)
+                {
+                    switch (mes[0])
+                    {
+
+                        case '1':
+                            ///setThreadedChatbox1(state.m_StringBuilder.ToString());
+                            break;
+                        case '3':
+                            //wyloguj
+                            break;
+                        case '7':
+                            //setThreadedForumListBox(state.m_StringBuilder.ToString());
+                            break;
+                        case '8':
+                            //this.setThreadedUserListBox(state.m_StringBuilder.ToString());
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+            }
+        }
         private void ConnectCallback(IAsyncResult ar)
         {
             try
@@ -121,6 +182,7 @@ namespace DayTime
                 /* create the SocketStateObject */
                 SocketStateObject state = new SocketStateObject();
                 state.m_SocketFd = socketFd;
+                this.fd=socketFd;
                 //state.m_StringBuilder = new StringBuilder( this.textBoxAddr.Text.ToString(), 8 );
                 setThreadedStatusLabel("Wait! Reading...");
                 //socketFd.Send(dataBuf, dataBuf.Length, 0);
@@ -128,13 +190,10 @@ namespace DayTime
                 Password = this.textBoxPassword.Text.ToString();
                 mess =Login+"\n"+Password+"\n";
                 Buf = Encoding.ASCII.GetBytes(mess);
-                
+
                 socketFd.Send(Buf, Buf.Length, 0);
                 setThreadedButton(true);
-                /* begin receiving the data */
-                
-                socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback), state);
-                
+                 
 
 
             }
@@ -192,7 +251,8 @@ namespace DayTime
                 Dns.BeginGetHostByName("192.168.1.14", new AsyncCallback(GetHostEntryCallback), null);
 
                 this.Hide();
-                
+               // Thread t = new Thread(StartReceiveMess);
+                //t.Start();
 
 
 

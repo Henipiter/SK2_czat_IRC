@@ -33,16 +33,77 @@ namespace DayTime
             this.fd = socketFd;
             this.endPoint = end;
             this.setThreadedtextBox3Username(username);
-            Thread t = new Thread(OpenNewFrom);
-            t.Start();
+            
             //receive.Hide();
             
         }
-        public void OpenNewFrom()
+        
+
+         string ReceiveMess(SocketStateObject state)
         {
-            Form5 receive = new Form5(this, fd, endPoint);
-            receive.Show();
+            var buffer = new List<byte>();
+            byte[] current;
+            while (true)
+            {
+                current = new byte[1];
+                int counter = this.fd.Receive(current, current.Length, SocketFlags.None);
+
+                if (current[0] == 10)
+                {
+                    break;
+                }
+
+                buffer.Add(current[0]);
+
+            }
+            var w = buffer.ToArray();
+            var ww = w.ToString();
+            return Encoding.Default.GetString(buffer.ToArray());
         }
+        public void StartReceiveMess()
+        {
+            SocketStateObject state = new SocketStateObject();
+            state.m_SocketFd = fd;
+            string mes;
+            int i = 0;
+            while (true)
+            {
+                i++;
+                MessageBox.Show("enedeu");
+                mes = ReceiveMess(state);
+                MessageBox.Show("dwadwa " + mes);
+                //fd.BeginReceive(state.m_DataBuf, 0, SocketStateObject3.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback3), state);
+                if (mes.Length >= 1)
+                {
+                    switch (mes[0])
+                    {
+
+                        case '1':
+                            ///setThreadedChatbox1(state.m_StringBuilder.ToString());
+                            break;
+                        case '3':
+                            //wyloguj
+                            break;
+                        case '7':
+                            //setThreadedForumListBox(state.m_StringBuilder.ToString());
+                            break;
+                        case '8':
+                            //this.setThreadedUserListBox(state.m_StringBuilder.ToString());
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+            }
+        }
+        
+
+
+
+
+
+
 
         private void setThreadedChangeForumButton(bool status)
         {
@@ -174,7 +235,7 @@ namespace DayTime
                 int size = socketFd.EndReceive(ar);
                 string a;
                 char b = '1';
-                
+                string c;
                 
                 if (b!='\n')
                 {
@@ -182,8 +243,33 @@ namespace DayTime
                     MessageBox.Show(state.m_StringBuilder.ToString()+ size.ToString());
                     /* get the rest of the data */
                     a = state.m_StringBuilder.ToString();
-                    b = a[a.Length - 1];
-                    MessageBox.Show("jjj" + a +  a.Length.ToString() + b.ToString());
+                    b = a[a.Length - 1]; 
+                    MessageBox.Show("jjj" + a + " d " +Char.ToString(b)+ "ss");
+                    if (b == '\n')
+                    {
+                        MessageBox.Show("aaa");
+                        /* all the data has arrived */
+                        
+                            switch (a[0])
+                            {
+                                case '2':
+                                    setThreadedChatbox1(a.Substring(1));
+                                    break;
+                                case '3':
+                                    //wyloguj
+                                    break;
+                                case '7':
+                                    setThreadedForumListBox(a.Substring(1));
+                                    break;
+                                case '8':
+                                    setThreadedUserListBox(state.m_StringBuilder.ToString());
+                                    break;
+                                default:
+                                    break;
+                            }
+                        state.m_StringBuilder = null;
+                        
+                    }
                     socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
                 }
                 else
@@ -226,23 +312,23 @@ namespace DayTime
                 /* retrieve the socket from the state object */
                 SocketStateObject2 state = (SocketStateObject2)ar.AsyncState;
                 Socket socketFd = state.m_SocketFd;
-                byte[] Buf;
-                string mess;
+               
                 /* complete the connection */
                 socketFd.EndConnect(ar);
 
                 /* create the SocketStateObject */
-                ;
+                
                 //state.m_StringBuilder = new StringBuilder( this.textBoxAddr.Text.ToString(), 8 );
                 //socketFd.Send(dataBuf, dataBuf.Length, 0);
-                
-                mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
+                byte[] Buf;
+                string mess = state.msg;
+                //mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
                 Buf = Encoding.ASCII.GetBytes(mess);
-
                 socketFd.Send(Buf, Buf.Length, 0);
+                //socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
+                
                 /* begin receiving the data */
 
-                //socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
 
             }
             catch (Exception exc)
@@ -261,12 +347,19 @@ namespace DayTime
             string mess;
             mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
             Buf = Encoding.ASCII.GetBytes(mess);
-            fd.Send(Buf, Buf.Length, 0);
             
-           // fd.BeginReceive(state.m_DataBuf, 0, SocketStateObject2.BUF_SIZzE, 0, new AsyncCallback(ReceiveCallback2), state);
-            MessageBox.Show(":::"+state.m_StringBuilder.ToString());
-        }
+           // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
+            fd.Send(Buf, Buf.Length, 0);
 
+           // StartReceiveMess();
+            //MessageBox.Show(":::"+state.m_StringBuilder.ToString());
+        }
+        private void ForumAddButton_Click(object sender, EventArgs e)
+        {
+            SocketStateObject2 state = new SocketStateObject2();
+            state.m_SocketFd = fd;
+            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
+        }
         private void SendButton_Click(object sender, EventArgs e)
         {
             SocketStateObject2 state = new SocketStateObject2();
@@ -276,10 +369,7 @@ namespace DayTime
             fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
         }
 
-        private void ForumAddButton_Click(object sender, EventArgs e)
-        {
-            
-        }
+        
 
         private void ForumDeleteButton_Click(object sender, EventArgs e)
         {
