@@ -34,77 +34,17 @@ namespace DayTime
             this.endPoint = end;
             this.setThreadedtextBox3Username(username);
             
-            //receive.Hide();
-            
+            //receive(fd);
         }
-        
 
-         string ReceiveMess(SocketStateObject state)
-        {
-            var buffer = new List<byte>();
-            byte[] current;
-            while (true)
-            {
-                current = new byte[1];
-                int counter = this.fd.Receive(current, current.Length, SocketFlags.None);
-
-                if (current[0] == 10)
-                {
-                    break;
-                }
-
-                buffer.Add(current[0]);
-
-            }
-            var w = buffer.ToArray();
-            var ww = w.ToString();
-            return Encoding.Default.GetString(buffer.ToArray());
-        }
-        public void StartReceiveMess()
+        void receive(Socket fd)
         {
             SocketStateObject state = new SocketStateObject();
             state.m_SocketFd = fd;
-            string mes;
-            int i = 0;
-            while (true)
-            {
-                i++;
-                MessageBox.Show("enedeu");
-                mes = ReceiveMess(state);
-                MessageBox.Show("dwadwa " + mes);
-                //fd.BeginReceive(state.m_DataBuf, 0, SocketStateObject3.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback3), state);
-                if (mes.Length >= 1)
-                {
-                    switch (mes[0])
-                    {
-
-                        case '1':
-                            ///setThreadedChatbox1(state.m_StringBuilder.ToString());
-                            break;
-                        case '3':
-                            //wyloguj
-                            break;
-                        case '7':
-                            //setThreadedForumListBox(state.m_StringBuilder.ToString());
-                            break;
-                        case '8':
-                            //this.setThreadedUserListBox(state.m_StringBuilder.ToString());
-                            break;
-                        default:
-                            break;
-                    }
-
-                }
-            }
+            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
         }
-        
 
-
-
-
-
-
-
+         
         private void setThreadedChangeForumButton(bool status)
         {
             if (this.ForumChangeButton.InvokeRequired)
@@ -219,7 +159,7 @@ namespace DayTime
             else
             {
                 //text = text.Substring(0, text.Length - 2);
-                this.textBox1.Text = text;
+                this.textBox1.Text += text;
             }
         }
 
@@ -229,84 +169,54 @@ namespace DayTime
             {
                 /* retrieve the SocketStateObject */
                 SocketStateObject2 state = (SocketStateObject2)ar.AsyncState;
-                Socket socketFd = state.m_SocketFd;
+                Socket socketFd = fd;
                 
                 /* read data */
                 int size = socketFd.EndReceive(ar);
                 string a;
-                char b = '1';
-                string c;
-                
-                if (b!='\n')
+                char b;
+                state.m_StringBuilder.Append(Encoding.ASCII.GetString(state.m_DataBuf, 0, size));
+                /* get the rest of the data */
+                a = state.m_StringBuilder.ToString();
+                b = a[a.Length - 1]; 
+                if (b == '\n')
                 {
-                    state.m_StringBuilder.Append(Encoding.ASCII.GetString(state.m_DataBuf, 0, size));
-                    MessageBox.Show(state.m_StringBuilder.ToString()+ size.ToString());
-                    /* get the rest of the data */
-                    a = state.m_StringBuilder.ToString();
-                    b = a[a.Length - 1]; 
-                    MessageBox.Show("jjj" + a + " d " +Char.ToString(b)+ "ss");
-                    if (b == '\n')
-                    {
-                        MessageBox.Show("aaa");
-                        /* all the data has arrived */
-                        
-                            switch (a[0])
-                            {
-                                case '1':
-                                    setThreadedChatbox1(a.Substring(1));
-                                    break;
-                                case '2':
-                                    setThreadedChatbox1(a.Substring(1));
-                                    break;
-                                case '3':
-                                    this.Close();
-                                    break;
-                                case '4':
-
-                                    break;
-                                case '5':
-                                    
-                                    break;
-                                case '7':
-                                    setThreadedForumListBox(a.Substring(1));
-                                    break;
-                                case '8':
-                                    setThreadedUserListBox(a.Substring(1));
-                                    break;
-                                default:
-                                    break;
-                            }
-                        state.m_StringBuilder = null;
-                        
-                    }
-                    socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
-                }
-                else
-                {
-                    MessageBox.Show("aaa");
                     /* all the data has arrived */
-                    if (state.m_StringBuilder.Length > 1)
-                    {
-                        switch (state.flag)
+
+                    MessageBox.Show("jjj" + a+"j");
+                    switch (a[0])
                         {
-                            case 2:
-                                setThreadedChatbox1(state.m_StringBuilder.ToString());
+                            case '1':
+                                setThreadedChatbox1(a.Substring(1));
                                 break;
-                            case 3:
-                                //wyloguj
+                            case '2':
+                                setThreadedChatbox1(a.Substring(1));
                                 break;
-                            case 7:
-                                setThreadedForumListBox(state.m_StringBuilder.ToString());
+                            case '3':
+                                this.Close();
                                 break;
-                            case 8:
-                                setThreadedUserListBox(state.m_StringBuilder.ToString());
+                            case '4':
+
+                                break;
+                            case '5':
+                                    
+                                break;
+                            case '7':
+                                setThreadedForumListBox(a.Substring(1));
+                                break;
+                            case '8':
+                                setThreadedUserListBox(a.Substring(1));
                                 break;
                             default:
                                 break;
                         }
-
-                    }
+                    state = null;
+                    state = new SocketStateObject2();
+                        
                 }
+                socketFd.BeginReceive(state.m_DataBuf, 0, 1, 0, new AsyncCallback(ReceiveCallback2), state);
+                
+                
             }
             catch (Exception exc)
             {
@@ -473,6 +383,23 @@ namespace DayTime
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void testButton_Click(object sender, EventArgs e)
+        {
+            SocketStateObject2 state = new SocketStateObject2();
+            state.m_SocketFd = fd;
+            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, 1, 0, new AsyncCallback(ReceiveCallback2), state);
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
         }

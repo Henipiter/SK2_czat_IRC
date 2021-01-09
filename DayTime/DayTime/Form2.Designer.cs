@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace DayTime
 {
     partial class Form2
@@ -32,7 +34,6 @@ namespace DayTime
             this.ForumRefreshButton = new System.Windows.Forms.Button();
             this.ForumAddButton = new System.Windows.Forms.Button();
             this.ForumListBox = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.SendButton = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -48,6 +49,8 @@ namespace DayTime
             this.ForumDeleteButton = new System.Windows.Forms.Button();
             this.userBox = new System.Windows.Forms.GroupBox();
             this.ChatBox = new System.Windows.Forms.GroupBox();
+            this.textBox1 = new System.Windows.Forms.RichTextBox();
+            this.testButton = new System.Windows.Forms.Button();
             this.ForumBox.SuspendLayout();
             this.userBox.SuspendLayout();
             this.ChatBox.SuspendLayout();
@@ -86,18 +89,6 @@ namespace DayTime
             this.ForumListBox.Size = new System.Drawing.Size(141, 128);
             this.ForumListBox.TabIndex = 1;
             this.ForumListBox.TextChanged += new System.EventHandler(this.ForumListBox_TextChanged);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(16, 53);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(721, 392);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // button1
             // 
@@ -160,6 +151,7 @@ namespace DayTime
             this.label2.Size = new System.Drawing.Size(83, 17);
             this.label2.TabIndex = 3;
             this.label2.Text = "Forumname";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // textBox4
             // 
@@ -259,12 +251,13 @@ namespace DayTime
             // 
             // ChatBox
             // 
+            this.ChatBox.Controls.Add(this.textBox1);
             this.ChatBox.Controls.Add(this.textBox4);
             this.ChatBox.Controls.Add(this.label2);
             this.ChatBox.Controls.Add(this.textBox3);
             this.ChatBox.Controls.Add(this.label1);
-            this.ChatBox.Controls.Add(this.textBox1);
             this.ChatBox.Controls.Add(this.textBox2);
+            this.ChatBox.Controls.Add(this.testButton);
             this.ChatBox.Controls.Add(this.button1);
             this.ChatBox.Controls.Add(this.SendButton);
             this.ChatBox.Location = new System.Drawing.Point(191, 2);
@@ -275,6 +268,28 @@ namespace DayTime
             this.ChatBox.TabIndex = 7;
             this.ChatBox.TabStop = false;
             this.ChatBox.Text = "Chat";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(36, 80);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(640, 334);
+            this.textBox1.TabIndex = 6;
+            this.textBox1.Text = "";
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // testButton
+            // 
+            this.testButton.Location = new System.Drawing.Point(471, 17);
+            this.testButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.testButton.Name = "testButton";
+            this.testButton.Size = new System.Drawing.Size(69, 28);
+            this.testButton.TabIndex = 0;
+            this.testButton.Text = "test";
+            this.testButton.UseVisualStyleBackColor = true;
+            this.testButton.Click += new System.EventHandler(this.testButton_Click);
             // 
             // Form2
             // 
@@ -297,12 +312,12 @@ namespace DayTime
 
         }
 
+
         #endregion
 
         private System.Windows.Forms.Button ForumRefreshButton;
         private System.Windows.Forms.Button ForumAddButton;
         private System.Windows.Forms.TextBox ForumListBox;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button SendButton;
         private System.Windows.Forms.TextBox textBox2;
@@ -318,5 +333,7 @@ namespace DayTime
         private System.Windows.Forms.GroupBox ChatBox;
         private System.Windows.Forms.Button ForumDeleteButton;
         private System.Windows.Forms.Button ForumChangeButton;
+        private System.Windows.Forms.Button testButton;
+        private System.Windows.Forms.RichTextBox textBox1;
     }
 }

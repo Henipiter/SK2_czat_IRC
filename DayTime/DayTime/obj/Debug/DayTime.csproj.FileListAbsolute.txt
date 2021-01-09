@@ -58,3 +58,5 @@ C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Properties
 C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.csproj.GenerateResource.cache
 C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.exe
 C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.pdb
+C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form3.resources
+C:\Users\Henryk\Semestr 5\SK2\Nowy folder\SKprojekt\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form4.resources
