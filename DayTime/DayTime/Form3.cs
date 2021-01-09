@@ -27,36 +27,6 @@ namespace DayTime
 
         
 
-        private void ConnectCallback(IAsyncResult ar)
-        {
-            try
-            {
-                /* retrieve the socket from the state object */
-                SocketStateObject2 state = (SocketStateObject2)ar.AsyncState;
-                Socket socketFd = state.m_SocketFd;
-                byte[] Buf;
-                string mess;
-                /* complete the connection */
-                socketFd.EndConnect(ar);
-
-                /* create the SocketStateObject */
-                ;
-                //state.m_StringBuilder = new StringBuilder( this.textBoxAddr.Text.ToString(), 8 );
-                //socketFd.Send(dataBuf, dataBuf.Length, 0);
-
-                mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
-                Buf = Encoding.ASCII.GetBytes(mess);
-
-                socketFd.Send(Buf, Buf.Length, 0);
-                /* begin receiving the data */
-
-
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
-            }
-        }
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -84,7 +54,7 @@ namespace DayTime
 
         private void sendButton_Click(object sender, EventArgs e)
         {
-            SocketStateObject2 state = new SocketStateObject2();
+            SocketStateObject3 state = new SocketStateObject3();
             state.m_SocketFd = fd;
             string uname= this.UsernameBox.Text.ToString();
             string pmsg= this.MessageBox1.Text.ToString();
@@ -98,6 +68,15 @@ namespace DayTime
 
             fd.Send(Buf, Buf.Length, 0);
             this.Close();
+        }
+        public class SocketStateObject3
+        {
+            public const int BUF_SIZzE = 1024;
+            public byte[] m_DataBuf = new byte[BUF_SIZzE];
+            public StringBuilder m_StringBuilder = new StringBuilder();
+            public Socket m_SocketFd = null;
+            public string msg;
+            public int flag;
         }
     }
 }

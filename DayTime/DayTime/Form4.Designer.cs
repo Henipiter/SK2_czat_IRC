@@ -41,11 +41,9 @@ namespace DayTime
             this.AddBox.Controls.Add(this.NameBox);
             this.AddBox.Controls.Add(this.AddButton);
             this.AddBox.Controls.Add(this.ForumNameLabel);
-            this.AddBox.Location = new System.Drawing.Point(13, 7);
-            this.AddBox.Margin = new System.Windows.Forms.Padding(4);
+            this.AddBox.Location = new System.Drawing.Point(10, 6);
             this.AddBox.Name = "AddBox";
-            this.AddBox.Padding = new System.Windows.Forms.Padding(4);
-            this.AddBox.Size = new System.Drawing.Size(445, 115);
+            this.AddBox.Size = new System.Drawing.Size(334, 93);
             this.AddBox.TabIndex = 1;
             this.AddBox.TabStop = false;
             this.AddBox.Text = "Add forum";
@@ -53,41 +51,40 @@ namespace DayTime
             // 
             // NameBox
             // 
-            this.NameBox.Location = new System.Drawing.Point(123, 23);
-            this.NameBox.Margin = new System.Windows.Forms.Padding(4);
+            this.NameBox.Location = new System.Drawing.Point(92, 19);
             this.NameBox.Name = "NameBox";
-            this.NameBox.Size = new System.Drawing.Size(312, 22);
+            this.NameBox.Size = new System.Drawing.Size(235, 20);
             this.NameBox.TabIndex = 1;
             this.NameBox.Text = "A";
             this.NameBox.TextChanged += new System.EventHandler(this.textBoxLogin_TextChanged);
             // 
             // AddButton
             // 
-            this.AddButton.Location = new System.Drawing.Point(162, 63);
-            this.AddButton.Margin = new System.Windows.Forms.Padding(4);
+            this.AddButton.Location = new System.Drawing.Point(122, 51);
             this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(100, 28);
+            this.AddButton.Size = new System.Drawing.Size(75, 23);
             this.AddButton.TabIndex = 3;
             this.AddButton.Text = "Add";
             this.AddButton.UseVisualStyleBackColor = true;
+            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // ForumNameLabel
             // 
             this.ForumNameLabel.AutoSize = true;
-            this.ForumNameLabel.Location = new System.Drawing.Point(8, 28);
-            this.ForumNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ForumNameLabel.Location = new System.Drawing.Point(6, 23);
             this.ForumNameLabel.Name = "ForumNameLabel";
-            this.ForumNameLabel.Size = new System.Drawing.Size(91, 17);
+            this.ForumNameLabel.Size = new System.Drawing.Size(68, 13);
             this.ForumNameLabel.TabIndex = 0;
             this.ForumNameLabel.Text = "Forum name:";
             this.ForumNameLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // Form4
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(474, 138);
+            this.ClientSize = new System.Drawing.Size(356, 112);
             this.Controls.Add(this.AddBox);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form4";
             this.Text = "Form4";
             this.AddBox.ResumeLayout(false);

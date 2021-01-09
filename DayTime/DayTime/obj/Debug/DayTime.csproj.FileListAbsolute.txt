@@ -47,3 +47,14 @@ C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.pdb
 C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\bin\Debug\DayTime.exe
 C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\bin\Debug\DayTime.pdb
 C:\Users\Henryk\Downloads\DayTime (2)\DayTime\DayTime\obj\Debug\DayTime.Form5.resources
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\bin\Debug\DayTime.exe
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\bin\Debug\DayTime.pdb
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.csprojAssemblyReference.cache
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form1.resources
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form2.resources
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form3.resources
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Form4.resources
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.Properties.Resources.resources
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.csproj.GenerateResource.cache
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.exe
+C:\Users\micha\Desktop\xd\SKprojekt\DayTime\DayTime\obj\Debug\DayTime.pdb

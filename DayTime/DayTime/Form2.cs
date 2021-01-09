@@ -252,17 +252,26 @@ namespace DayTime
                         
                             switch (a[0])
                             {
+                                case '1':
+                                    setThreadedChatbox1(a.Substring(1));
+                                    break;
                                 case '2':
                                     setThreadedChatbox1(a.Substring(1));
                                     break;
                                 case '3':
-                                    //wyloguj
+                                    this.Close();
+                                    break;
+                                case '4':
+
+                                    break;
+                                case '5':
+                                    
                                     break;
                                 case '7':
                                     setThreadedForumListBox(a.Substring(1));
                                     break;
                                 case '8':
-                                    setThreadedUserListBox(state.m_StringBuilder.ToString());
+                                    setThreadedUserListBox(a.Substring(1));
                                     break;
                                 default:
                                     break;
@@ -356,9 +365,13 @@ namespace DayTime
         }
         private void ForumAddButton_Click(object sender, EventArgs e)
         {
-            SocketStateObject2 state = new SocketStateObject2();
-            state.m_SocketFd = fd;
-            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
+
+            //SocketStateObject2 state = new SocketStateObject2();
+            //state.m_SocketFd = fd;
+            //state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
+            Form4 frm = new Form4(fd, endPoint,4);
+            frm.Show();
+
         }
         private void SendButton_Click(object sender, EventArgs e)
         {
@@ -366,14 +379,22 @@ namespace DayTime
             state.m_SocketFd = fd;
             state.msg = this.textBox2.Text.ToString();
             state.flag = 2;
-            fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
+
+            byte[] Buf;
+            string mess;
+            mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
+            Buf = Encoding.ASCII.GetBytes(mess);
+
+            // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
+            fd.Send(Buf, Buf.Length, 0);
         }
 
         
 
         private void ForumDeleteButton_Click(object sender, EventArgs e)
         {
-
+            Form4 frm = new Form4(fd, endPoint, 5);
+            frm.Show();
         }
 
         
@@ -400,7 +421,17 @@ namespace DayTime
 
         private void button1_Click(object sender, EventArgs e)
         {
+            SocketStateObject2 state = new SocketStateObject2();
+            state.m_SocketFd = fd;
+            state.msg = "";
+            state.flag = 3;
+            byte[] Buf;
+            string mess;
+            mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
+            Buf = Encoding.ASCII.GetBytes(mess);
 
+            // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
+            fd.Send(Buf, Buf.Length, 0);
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -416,12 +447,18 @@ namespace DayTime
 
         private void UserRefreshButton_Click(object sender, EventArgs e)
         {
+
             SocketStateObject2 state = new SocketStateObject2();
             state.m_SocketFd = fd;
             state.msg = "";
             state.flag = 8;
-            fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
+            byte[] Buf;
+            string mess;
+            mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
+            Buf = Encoding.ASCII.GetBytes(mess);
+
+            // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
+            fd.Send(Buf, Buf.Length, 0);
         }
 
         private void UserListBox_TextChanged(object sender, EventArgs e)
@@ -431,7 +468,8 @@ namespace DayTime
 
         private void ForumChangeButton_Click(object sender, EventArgs e)
         {
-            
+            Form4 frm = new Form4(fd, endPoint, 1);
+            frm.Show();
         }
 
         private void label1_Click(object sender, EventArgs e)
