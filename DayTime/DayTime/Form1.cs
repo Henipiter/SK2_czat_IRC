@@ -223,7 +223,7 @@ namespace DayTime
                 
                 /* remote endpoint for the socket */
                 endPoint = new IPEndPoint(addresses[0], 1234);
-                Form2 frm = new Form2(socketFd, "ssss", endPoint);
+                Form2 frm = new Form2(socketFd, this.textBoxLogin.Text.ToString(), endPoint);
                 frm.Show();
                 setThreadedStatusLabel("Wait! Connecting...");
 

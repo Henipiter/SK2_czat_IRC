@@ -22,6 +22,7 @@ namespace DayTime
         delegate void setThreadedForumListBoxCallback(String text);
         delegate void setThreadedUserListBoxCallback(String text);
         delegate void setThreadedtextBox1ChatCallback(String text);
+        delegate void setThreadedtextBox2ChatCallback(String text);
         delegate void setThreadedForumChangeButtonCallback(bool status);
         delegate void setThreadedForumAddButtonCallback(bool status);
         delegate void setThreadedForumDeleteButtonCallback(bool status);
@@ -162,6 +163,19 @@ namespace DayTime
                 this.textBox1.Text += text;
             }
         }
+        public void setThreadedChatbox2(String text)
+        {
+            if (this.textBox1.InvokeRequired)
+            {
+                setThreadedtextBox2ChatCallback textBoxCallback = new setThreadedtextBox2ChatCallback(setThreadedChatbox2);
+                this.obj.Invoke(textBoxCallback, text);
+            }
+            else
+            {
+                //text = text.Substring(0, text.Length - 2);
+                this.textBox1.Text = text;
+            }
+        }
 
         private void ReceiveCallback2(IAsyncResult ar)
         {
@@ -187,10 +201,25 @@ namespace DayTime
                     switch (a[0])
                         {
                             case '1':
-                                setThreadedChatbox1(a.Substring(1));
+                                setThreadedChatbox2(a.Substring(1));
                                 break;
                             case '2':
                                 setThreadedChatbox1(a.Substring(1));
+                                string temp;
+                                string forumn=null;
+                                temp = a.Substring(1);
+                                for (int i = 0; i < temp.Length; i++) 
+                                {
+                                    if (temp[i] == '\n')
+                                    {
+                                        forumn += temp[i];
+                                    }
+                                    else 
+                                    {
+                                    i = temp.Length;
+                                    }
+                                }
+                                this.setThreadedtextBox4Forumname(forumn); //z tego substringa
                                 break;
                             case '3':
                                 this.Close();
