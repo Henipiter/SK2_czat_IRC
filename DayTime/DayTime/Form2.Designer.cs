@@ -50,7 +50,6 @@ namespace DayTime
             this.userBox = new System.Windows.Forms.GroupBox();
             this.ChatBox = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.RichTextBox();
-            this.testButton = new System.Windows.Forms.Button();
             this.ForumBox.SuspendLayout();
             this.userBox.SuspendLayout();
             this.ChatBox.SuspendLayout();
@@ -257,7 +256,6 @@ namespace DayTime
             this.ChatBox.Controls.Add(this.textBox3);
             this.ChatBox.Controls.Add(this.label1);
             this.ChatBox.Controls.Add(this.textBox2);
-            this.ChatBox.Controls.Add(this.testButton);
             this.ChatBox.Controls.Add(this.button1);
             this.ChatBox.Controls.Add(this.SendButton);
             this.ChatBox.Location = new System.Drawing.Point(191, 2);
@@ -279,17 +277,6 @@ namespace DayTime
             this.textBox1.TabIndex = 6;
             this.textBox1.Text = "";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // testButton
-            // 
-            this.testButton.Location = new System.Drawing.Point(471, 17);
-            this.testButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.testButton.Name = "testButton";
-            this.testButton.Size = new System.Drawing.Size(69, 28);
-            this.testButton.TabIndex = 0;
-            this.testButton.Text = "test";
-            this.testButton.UseVisualStyleBackColor = true;
-            this.testButton.Click += new System.EventHandler(this.testButton_Click);
             // 
             // Form2
             // 
@@ -333,7 +320,6 @@ namespace DayTime
         private System.Windows.Forms.GroupBox ChatBox;
         private System.Windows.Forms.Button ForumDeleteButton;
         private System.Windows.Forms.Button ForumChangeButton;
-        private System.Windows.Forms.Button testButton;
         private System.Windows.Forms.RichTextBox textBox1;
     }
 }

@@ -18,6 +18,7 @@ namespace DayTime
     public partial class Form1 : Form
     {
         private Form obj;
+        private Form2 frm;
         private Socket fd;
         private IPEndPoint endPoint = null;
         delegate void setThreadedTextBoxCallback(String text);
@@ -179,7 +180,8 @@ namespace DayTime
                 
                 /* remote endpoint for the socket */
                 endPoint = new IPEndPoint(addresses[0], 1234);
-                //Form2 frm = new Form2(socketFd, this.textBoxLogin.Text.ToString(), endPoint, this);
+                
+                frm = new Form2(socketFd, this.textBoxLogin.Text.ToString(), endPoint, this);
                 //frm.Show();
                 setThreadedStatusLabel("Wait! Connecting...");
 
@@ -205,8 +207,8 @@ namespace DayTime
                 setThreadedStatusLabel("Wait! DNS query...");
                 /* get DNS host information */
                 Dns.BeginGetHostByName("192.168.1.14", new AsyncCallback(GetHostEntryCallback), null);
-                Form2 frm = new Form2(this.fd, this.textBoxLogin.Text.ToString(), endPoint, this);
-                frm.Hide();
+                //Form2 frm = new Form2(this.fd, this.textBoxLogin.Text.ToString(), endPoint, this);
+                frm.Show();
                 frm.startReceive();
 
                 //this.Hide();

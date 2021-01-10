@@ -186,10 +186,11 @@ namespace DayTime
                 int size = socketFd.EndReceive(ar);
                 string a;
                 char b;
+                
                 state.m_StringBuilder.Append(Encoding.ASCII.GetString(state.m_DataBuf, 0, size));
                 /* get the rest of the data */
                 a = state.m_StringBuilder.ToString();
-                b = a[a.Length - 1]; 
+                b = a[a.Length - 1];
                 if (b == '\n')
                 {
                     /* all the data has arrived */
@@ -197,42 +198,50 @@ namespace DayTime
                     MessageBox.Show("jjj" + a+"j");
                     switch (a[0])
                         {
-                            case 'Y':
-                                this.Show();
-                                mainForm.Hide();
-                                break;
-                            case 'N':
-                                MessageBox.Show("Blad logowania");
-                                break;
-                            case '2':
-                                setThreadedChatbox1(a.Substring(1));
-                                break;
-                            case '1':
-                                setThreadedChatbox1(a.Substring(1));
-                                this.setThreadedtextBox4Forumname(a.Substring(1));
+                        case '0':
+                            switch (a[1])
+                            {
+                                case 'Y':
+                                    //this.Hide();
+                                    //mainForm.Hide();
+                                    break;
+                                case 'N':
+                                    MessageBox.Show("Blad logowania");                                    
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
-                            case '3':
-                                socketFd.Shutdown(SocketShutdown.Both);
-                                socketFd.Close();
-                                this.mainForm.Show();
-                                this.Close(); 
+                                                    
+                        case '2':
+                            setThreadedChatbox1(a.Substring(1));
+                            break;
+                        case '1':
+                            setThreadedChatbox1(a.Substring(1));
+                            this.setThreadedtextBox4Forumname(a.Substring(1));
+                        break;
+                        case '3':
+                            socketFd.Shutdown(SocketShutdown.Both);
+                            socketFd.Close();
+                            this.mainForm.Show();
+                            this.Close(); 
                                 
-                                break;
-                            case '4':
+                            break;
+                        case '4':
 
-                                break;
-                            case '5':
+                            break;
+                        case '5':
                                     
-                                break;
-                            case '7':
-                                setThreadedForumListBox(a.Substring(1));
-                                break;
-                            case '8':
-                                setThreadedUserListBox(a.Substring(1));
-                                break;
-                            default:
-                                break;
-                        }
+                            break;
+                        case '7':
+                            setThreadedForumListBox(a.Substring(1));
+                            break;
+                        case '8':
+                            setThreadedUserListBox(a.Substring(1));
+                            break;
+                        default:
+                            break;
+                    }
                     state = null;
                     state = new SocketStateObject2();
                         
@@ -422,13 +431,7 @@ namespace DayTime
 
         }
 
-        private void testButton_Click(object sender, EventArgs e)
-        {
-            SocketStateObject2 state = new SocketStateObject2();
-            state.m_SocketFd = fd;
-            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, 1, 0, new AsyncCallback(ReceiveCallback2), state);
-        }
-
+       
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
