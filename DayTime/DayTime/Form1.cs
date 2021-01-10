@@ -149,7 +149,7 @@ namespace DayTime
 
                 socketFd.Send(Buf, Buf.Length, 0);
                 setThreadedButton(true);
-                state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback), state);
+                //state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback), state);
 
 
             }
@@ -205,9 +205,12 @@ namespace DayTime
                 setThreadedStatusLabel("Wait! DNS query...");
                 /* get DNS host information */
                 Dns.BeginGetHostByName("192.168.1.14", new AsyncCallback(GetHostEntryCallback), null);
+                Form2 frm = new Form2(this.fd, this.textBoxLogin.Text.ToString(), endPoint, this);
+                frm.Hide();
+                frm.startReceive();
 
                 //this.Hide();
-               // Thread t = new Thread(StartReceiveMess);
+                // Thread t = new Thread(StartReceiveMess);
                 //t.Start();
 
 

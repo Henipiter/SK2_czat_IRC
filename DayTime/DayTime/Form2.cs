@@ -197,6 +197,13 @@ namespace DayTime
                     MessageBox.Show("jjj" + a+"j");
                     switch (a[0])
                         {
+                            case 'Y':
+                                this.Show();
+                                mainForm.Hide();
+                                break;
+                            case 'N':
+                                MessageBox.Show("Blad logowania");
+                                break;
                             case '2':
                                 setThreadedChatbox1(a.Substring(1));
                                 break;
@@ -387,7 +394,12 @@ namespace DayTime
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
             fd.Send(Buf, Buf.Length, 0);
         }
-
+        public void startReceive()
+        {
+            SocketStateObject2 state = new SocketStateObject2();
+            state.m_SocketFd = fd;
+            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, 1, 0, new AsyncCallback(ReceiveCallback2), state);
+        }
         private void UserListBox_TextChanged(object sender, EventArgs e)
         {
 
