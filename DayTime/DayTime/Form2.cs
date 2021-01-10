@@ -40,12 +40,7 @@ namespace DayTime
             //receive(fd);
         }
 
-        void receive(Socket fd)
-        {
-            SocketStateObject state = new SocketStateObject();
-            state.m_SocketFd = fd;
-            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
-        }
+        
 
          
         private void setThreadedChangeForumButton(bool status)

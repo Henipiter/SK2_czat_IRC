@@ -76,42 +76,54 @@ namespace DayTime
             try
             {
                 /* retrieve the SocketStateObject */
-                SocketStateObject state = (SocketStateObject)ar.AsyncState;
-                Socket socketFd = state.m_SocketFd;
+                SocketStateObject2 state = (SocketStateObject2)ar.AsyncState;
+                Socket socketFd = fd;
 
                 /* read data */
                 int size = socketFd.EndReceive(ar);
-
-                if (size > 0)
-                {
-                    state.m_StringBuilder.Append(Encoding.ASCII.GetString(state.m_DataBuf, 0, size));
-                    
-                    /* get the rest of the data */
-                    socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback), state);
-                }
-                else
+                string a;
+                char b;
+                state.m_StringBuilder.Append(Encoding.ASCII.GetString(state.m_DataBuf, 0, size));
+                /* get the rest of the data */
+                a = state.m_StringBuilder.ToString();
+                b = a[a.Length - 1];
+                if (b == '\n')
                 {
                     /* all the data has arrived */
-                    if (state.m_StringBuilder.Length > 1)
-                    {
-                        setThreadedTextBox(state.m_StringBuilder.ToString());
-                        setThreadedStatusLabel("Done.");
-                        setThreadedButton(true);
 
-                        /* shutdown and close socket */
-                        
+                    MessageBox.Show("jjj" + a + "j");
+                    switch (a[0])
+                    {
+                        case 'Y':
+                            Form2 frm = new Form2(socketFd, this.textBoxLogin.Text.ToString(), endPoint, this);
+                            frm.Show();
+                            this.Hide();
+                            socketFd.EndReceive(ar);
+                            break;
+                        case 'N':
+                            MessageBox.Show("Blad logowania");
+                            socketFd.EndReceive(ar);
+                            break;
+                       
+                        default:
+                            break;
                     }
+                    state = null;
+                    state = new SocketStateObject2();
+
                 }
+                socketFd.BeginReceive(state.m_DataBuf, 0, 1, 0, new AsyncCallback(ReceiveCallback), state);
+
+
             }
             catch (Exception exc)
             {
                 MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
-                setThreadedStatusLabel("Check \"Server Info\" and try again!");
-                setThreadedButton(true);
             }
-        
-       
         }
+
+
+    
         private void ConnectCallback(IAsyncResult ar)
         {
             try
@@ -137,7 +149,7 @@ namespace DayTime
 
                 socketFd.Send(Buf, Buf.Length, 0);
                 setThreadedButton(true);
-                 
+                state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback), state);
 
 
             }
@@ -167,8 +179,8 @@ namespace DayTime
                 
                 /* remote endpoint for the socket */
                 endPoint = new IPEndPoint(addresses[0], 1234);
-                Form2 frm = new Form2(socketFd, this.textBoxLogin.Text.ToString(), endPoint, this);
-                frm.Show();
+                //Form2 frm = new Form2(socketFd, this.textBoxLogin.Text.ToString(), endPoint, this);
+                //frm.Show();
                 setThreadedStatusLabel("Wait! Connecting...");
 
                 /* connect to the server */
@@ -194,7 +206,7 @@ namespace DayTime
                 /* get DNS host information */
                 Dns.BeginGetHostByName("192.168.1.14", new AsyncCallback(GetHostEntryCallback), null);
 
-                this.Hide();
+                //this.Hide();
                // Thread t = new Thread(StartReceiveMess);
                 //t.Start();
 
