@@ -70,6 +70,7 @@ namespace DayTime
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
             fd.Send(Buf, Buf.Length, 0);
+            
             this.Close();
         }
         public class SocketStateObject4

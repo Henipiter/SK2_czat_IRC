@@ -255,7 +255,6 @@ namespace DayTime
                 {
                     /* all the data has arrived */
 
-                    MessageBox.Show("jjj" + a+"j");
                     switch (a[0])
                         {
                         case '0':
@@ -263,16 +262,9 @@ namespace DayTime
                             {
                                 case 'Y':
                                     setThreadedLogoutButton1(true);
-                                    SocketStateObject2 state0 = new SocketStateObject2();
-                                    state0.m_SocketFd = fd;
-                                    state0.msg = "";
-                                    state0.flag = 7;
-                                    byte[] Buf0;
-                                    string mess0;
-                                    mess0 = state0.flag.ToString() + "\n" + state0.msg.Length + "\n" + state0.msg;
-                                    Buf0 = Encoding.ASCII.GetBytes(mess0);
+                                    string mess0 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
+                                    byte[] Buf0 = Encoding.ASCII.GetBytes(mess0);
                                     fd.Send(Buf0, Buf0.Length, 0);
-
                                     setThreadedRefreshForumButton(true);
                                     setThreadedChangeForumButton(true);
                                     setThreadedAddForumButton(true);
@@ -291,19 +283,45 @@ namespace DayTime
                             switch (a[1])
                             {
                                 case 'Y':
-                                    SocketStateObject2 state0 = new SocketStateObject2();
-                                    state0.m_SocketFd = fd;
-                                    state0.msg = "";
-                                    state0.flag = 7;
-                                    byte[] Buf0;
-                                    string mess0;
-                                    mess0 = state0.flag.ToString() + "\n" + state0.msg.Length + "\n" + state0.msg;
+                                    string mess0 = 8.ToString() + "\n" + 0.ToString() + "\n" + "";
+                                    byte[] Buf0 = Encoding.ASCII.GetBytes(mess0);
+                                    fd.Send(Buf0, Buf0.Length, 0);
+                                    mess0 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
                                     Buf0 = Encoding.ASCII.GetBytes(mess0);
                                     fd.Send(Buf0, Buf0.Length, 0);
-
                                     setThreadedRefreshUserButton(true);
                                     setThreadedUserWriteButton(true);
                                     setThreadedSendButton(true);
+                                    break;
+                                case 'N':
+                                    MessageBox.Show("Nie znaleziono");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 'e':
+                            string mess1 = 8.ToString() + "\n" + 0.ToString() + "\n" + "";
+                            byte[] Buf1 = Encoding.ASCII.GetBytes(mess1);
+                            fd.Send(Buf1, Buf1.Length, 0);
+                            break;
+
+                        case 'f':
+                            mess1 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
+                            Buf1 = Encoding.ASCII.GetBytes(mess1);
+                            fd.Send(Buf1, Buf1.Length, 0);
+                            break;
+                        case 'd':
+                            switch (a[1])
+                            {
+                                case 'Y':
+                                    string mess0 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
+                                    byte[] Buf0 = Encoding.ASCII.GetBytes(mess0);
+                                    fd.Send(Buf0, Buf0.Length, 0);
+                                    
+                                    setThreadedRefreshUserButton(false);
+                                    setThreadedUserWriteButton(false);
+                                    setThreadedSendButton(false);
                                     break;
                                 case 'N':
                                     MessageBox.Show("Nie znaleziono");
@@ -350,6 +368,12 @@ namespace DayTime
                             break;
                         case 'a':
                             this.setThreadedtextBox4Forumname("");
+                            this.setThreadedUserListBox("");
+                            this.setThreadedChatbox2("");
+                            setThreadedRefreshUserButton(false);
+                            setThreadedUserWriteButton(false);
+                            setThreadedSendButton(false);
+
                             MessageBox.Show("Forum zostalo usuniete");
 
                             break;
@@ -359,12 +383,12 @@ namespace DayTime
                         case '8':
                             setThreadedUserListBox(a.Substring(1));
                             break;
+                        
                         default:
                             break;
                     }
                     state = null;
                     state = new SocketStateObject2();
-                        
                 }
                 socketFd.BeginReceive(state.m_DataBuf, 0, 1, 0, new AsyncCallback(ReceiveCallback2), state);
                 
@@ -376,38 +400,7 @@ namespace DayTime
             }
         }
        
-        private void ConnectCallback2(IAsyncResult ar)
-        {
-            try
-            {
-                /* retrieve the socket from the state object */
-                SocketStateObject2 state = (SocketStateObject2)ar.AsyncState;
-                Socket socketFd = state.m_SocketFd;
-               
-                /* complete the connection */
-                socketFd.EndConnect(ar);
-
-                /* create the SocketStateObject */
-                
-                //state.m_StringBuilder = new StringBuilder( this.textBoxAddr.Text.ToString(), 8 );
-                //socketFd.Send(dataBuf, dataBuf.Length, 0);
-                byte[] Buf;
-                string mess = state.msg;
-                //mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
-                Buf = Encoding.ASCII.GetBytes(mess);
-                socketFd.Send(Buf, Buf.Length, 0);
-                //socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
-                
-                /* begin receiving the data */
-
-
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
-            }
-        }
-
+        
         private void ForumRefreshButton_Click(object sender, EventArgs e)
         {
             SocketStateObject2 state = new SocketStateObject2();
@@ -551,11 +544,6 @@ namespace DayTime
 
         }
 
-       
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
     public class SocketStateObject2
     {
