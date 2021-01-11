@@ -90,12 +90,13 @@ void setup(){
 //funkcja dzieki ktorej podany uzytkownik zostaje wylogowany z forum na ktorym jest zalogowany
 void leaveForum(int index_user, int cfd){
     for(int j=0; j<9;j++){  
-        if( forums[users[index_user].index_forum].id_users[j] == cfd ){
-            forums[users[index_user].index_forum].id_users[j] = forums[users[index_user].index_forum].id_users[forums[users[index_user].index_forum].countUser];
-            forums[users[index_user].index_forum].id_users[forums[users[index_user].index_forum].countUser] = 0;
-            strcpy(forums[users[index_user].index_forum].username[j], forums[users[index_user].index_forum].username[forums[users[index_user].index_forum].countUser]);
-            strcpy(forums[users[index_user].index_forum].username[forums[users[index_user].index_forum].countUser],"w");
-            forums[users[index_user].index_forum].countUser--;
+        int indexOfForum = users[index_user].index_forum;
+        if( forums[indexOfForum].id_users[j] == cfd ){
+            forums[indexOfForum].id_users[j] = forums[indexOfForum].id_users[forums[indexOfForum].countUser-1];
+            forums[indexOfForum].id_users[forums[indexOfForum].countUser-1] = 0;
+            strcpy(forums[indexOfForum].username[j], forums[indexOfForum].username[forums[indexOfForum].countUser-1]);
+            strcpy(forums[indexOfForum].username[forums[indexOfForum].countUser-1],"w");
+            forums[indexOfForum].countUser--;
             j=9; 
         }
     }
@@ -167,7 +168,7 @@ void* cthread(void* arg){
         }
         //odszukanie w bazie zarejestrowanych uzytkownikow
         for( int i=0;i<9;i++){
-            if(compare(login, users[i].name)){
+            if(compare(login, users[i].name) && (users[i].logged==0)){
                 if(compare(password, users[i].password)){
                     //login i haslo sie zgadzaja
                     users[i].logged = 1;
@@ -237,10 +238,22 @@ void* cthread(void* arg){
                 ifCorrectName=0;
                 for(int i=0;i<10;i++){
                     if(forums[i].name[0] != '-'){
+                        
+                        
                         if(compare( forums[i].name, msgFromClient)){
+                            
+                            
                             forums[i].id_users[ forums[i].countUser] = c->cfd; //zapisanie id do wybranego forum
+                            
                             if(users[index_user].index_forum != -1){ //jeżeli użytkownik jest w jakimś forum
+                                for(int j=0;j< forums[users[index_user].index_forum].countUser;j++){
+                                    int cfdd = forums[users[index_user].index_forum].id_users[j];
+                                    sendMessage(cfdd, "e\n");
+                                }
+                                printf("AAAAAAAAAAAAAAAAAAAA\n");
+                                showForum();
                                 leaveForum(index_user, c->cfd); //usun uzytkownika z biezacego forum
+                                showForum();
                             }
                             users[index_user].index_forum = i;
                             strcpy(forums[i].username[forums[i].countUser],users[index_user].name); //zapisz uzytkownika na ostatnie wolne miejsce
@@ -253,6 +266,11 @@ void* cthread(void* arg){
                             FILE *hist = fopen( historyForum[ users[index_user].index_forum], "rt");
                             printf("wysylanie...\n");
                             int first=0;
+                            for(int j=0;j< forums[users[index_user].index_forum].countUser;j++){
+                                int cfdd = forums[users[index_user].index_forum].id_users[j];
+                                sendMessage(cfdd, "e\n");
+                            }       
+                            
                             
                             while(getline(&historyMessege, &len, hist) >0){
                                 msgToClient[0] = '\0';
@@ -296,22 +314,29 @@ void* cthread(void* arg){
                     FILE *history = fopen( historyForum[users[index_user].index_forum], "a");
                     fprintf(history, "%s\t%s\n", users[index_user].name, msgFromClient);
                     fclose(history);
-                    msgFromClient[0]='\0';
+                    
                 }
+                msgFromClient[0]='\0';
                 break;
                 
             case '3':
                 printf("Opcja3\n");
                 //nastepuje wylogowanie z wyslaniem wiadomosci potwierdzającej klientowi
+                for(int j=0;j< forums[ users[index_user].index_forum ].countUser;j++){
+                    int cfdd = forums[users[index_user].index_forum].id_users[j];
+                    sendMessage(cfdd, "e\n");
+                }
+                
                 users[index_user].logged =0;
                 logged = 0;
                 index_user=-1;
                 leaveForum(index_user, c->cfd);
                 showForum();
                 sendMessage(c->cfd, "3\n");
+                
                 break;
             case '4':
-                //utworzenie nowego forum
+                //utworzenie nowego serwera
                 ifCorrectName=1;
                 printf("Opcja4\n");
                 for(int i=0;i<10;i++){
@@ -327,13 +352,15 @@ void* cthread(void* arg){
                     for(int i=0;i<10;i++){
                         if(forums[i].name[0] == '-'){
                             FILE *history = fopen( historyForum[i], "w");
-	//********************************************************************************
-                            sendMessage(c->cfd, "bN\n");//tutaj bY?????????
-	//********************************************************************************
+                            sendMessage(c->cfd, "bY\n");
                             strcpy( forums[i].name, msgFromClient);
                             fprintf(history, "%s\n", msgFromClient);
                             fclose(history);
                             i=10;
+                            for(int j=0;j< forums[ users[index_user].index_forum ].countUser;j++){
+                                int cfdd = forums[users[index_user].index_forum].id_users[j];
+                                sendMessage(cfdd, "f\n");
+                            }
                         }
                     }
                 }
@@ -348,21 +375,30 @@ void* cthread(void* arg){
                 for(int i=0;i<10;i++){
                     printf("< %s %s >\n", forums[i].name, msgFromClient);
                     if(compare( forums[i].name, msgFromClient)){
-                        if( i == users[index_user].index_forum){
-                            users[index_user].index_forum=-1;
-                        }
+                        
                         FILE *history = fopen( historyForum[i], "w");
                         strcpy( forums[i].name, "-");
                         printf("< %d \n", forums[i].countUser);
                         for(int j=0;j<forums[i].countUser;j++){
                             //wyslanie do uzytkownikow forum informacji, ze forum przestalo istniec
-                            sendMessage(c->cfd, "a\n");
+                            int cfdd = forums[i].id_users[j];
+                            sendMessage(cfdd, "a\n");
                             //ustawienie w strukturze forum, iż nikt nie jest do niego podlaczony
                             forums[i].id_users[j] = 0;
                             forums[i].username[j][0] = '\0';
                         }
+                        for(int j=0;j< 10;j++){
+                            for(int k=0;k< forums[j].countUser; k++){
+                                int cfdd = forums[j].id_users[k];
+                                sendMessage(cfdd, "f\n");
+                            }
+                            
+                        }
+                        if( i == users[index_user].index_forum){
+                            users[index_user].index_forum=-1;
+                        }
                         fclose(history);
-                        sendMessage(c->cfd, "cY\n");
+                        sendMessage(c->cfd, "dY\n");
                         for(int j=0;j<9;j++){
                             if( users[j].index_forum == i ){
                                 users[j].index_forum = -1;   
@@ -374,7 +410,7 @@ void* cthread(void* arg){
                 }
                 if(ifCorrectName==0){
                     printf("nie ma takiego forum %d\n", i);
-                    sendMessage(c->cfd, "cN\n");
+                    sendMessage(c->cfd, "dN\n");
                 }
                 saveForumToFile();
                 showForum();
@@ -395,17 +431,25 @@ void* cthread(void* arg){
                 ifCorrectName=0;
                 strcat(msgToClient, mess);
                 strcat(msgToClient, "\n");
+                int cfdd;
                 for(int j=0; j< forums[ users[index_user].index_forum  ].countUser;j++){
                     printf("< %s %s >\n", send_to, forums[ users[index_user].index_forum  ].username[j]);
                     if( compare( send_to,forums[ users[index_user].index_forum  ].username[j])){
                         ifCorrectName=1;
-                        i=10;
+                        j=10;
                         sendMessage(c->cfd, "cY\n");
                         printf("weszet %s\n", msgToClient);
-                        int cfdd = forums[ users[index_user].index_forum  ].id_users[j];
+                        cfdd = forums[ users[index_user].index_forum  ].id_users[j];
                         sendMessage(cfdd, msgToClient);
                     }
                 }
+                strcat(msgToClient, "2PW TO ");
+                strcat(msgToClient, send_to);
+                strcat(msgToClient, "\t");
+                strcat(msgToClient, mess);
+                strcat(msgToClient, "\n");
+                sendMessage(cfdd, msgToClient);
+                
                 if(ifCorrectName==0){
                     printf("nie ma takiego uzytkownika\n");
                     sendMessage(c->cfd, "cN\n");
