@@ -27,7 +27,11 @@ namespace DayTime
         delegate void setThreadedForumChangeButtonCallback(bool status);
         delegate void setThreadedForumAddButtonCallback(bool status);
         delegate void setThreadedForumDeleteButtonCallback(bool status);
+        delegate void setThreadedForumRefreshButtonCallback(bool status);
+        delegate void setThreadedUserRefreshButtonCallback(bool status);
         delegate void setThreadedUserWriteButtonCallback(bool status);
+        delegate void setThreadedLogoutButton1Callback(bool status);
+        delegate void setThreadedSendButtonCallback(bool status);
         public Form2(Socket socketFd,string username, IPEndPoint end, Form formm)
         {
             InitializeComponent();
@@ -36,13 +40,69 @@ namespace DayTime
             this.endPoint = end;
             this.mainForm = formm as Form1;
             this.setThreadedtextBox3Username(username);
-            
+            setThreadedLogoutButton1(false);
+            setThreadedRefreshUserButton(false);
+            setThreadedRefreshForumButton(false);
+            setThreadedChangeForumButton(false);
+            setThreadedAddForumButton(false);
+            setThreadedDeleteForumButton(false);
+            setThreadedUserWriteButton(false);
+            setThreadedSendButton(false);
             //receive(fd);
         }
 
-        
+        private void setThreadedSendButton(bool status)
+        {
+            if (this.SendButton.InvokeRequired)
+            {
+                setThreadedSendButtonCallback buttonCallback = new setThreadedSendButtonCallback(setThreadedSendButton);
+                this.obj.Invoke(buttonCallback, status);
+            }
+            else
+            {
+                this.SendButton.Enabled = status;
 
-         
+            }
+        }
+        private void setThreadedLogoutButton1(bool status)
+        {
+            if (this.button1.InvokeRequired)
+            {
+                setThreadedLogoutButton1Callback buttonCallback = new setThreadedLogoutButton1Callback(setThreadedLogoutButton1);
+                this.obj.Invoke(buttonCallback, status);
+            }
+            else
+            {
+                this.button1.Enabled = status;
+
+            }
+        }
+        private void setThreadedRefreshUserButton(bool status)
+        {
+            if (this.UserRefreshButton.InvokeRequired)
+            {
+                setThreadedUserRefreshButtonCallback buttonCallback = new setThreadedUserRefreshButtonCallback(setThreadedRefreshUserButton);
+                this.obj.Invoke(buttonCallback, status);
+            }
+            else
+            {
+                this.UserRefreshButton.Enabled = status;
+
+            }
+        }
+        private void setThreadedRefreshForumButton(bool status)
+        {
+            if (this.ForumRefreshButton.InvokeRequired)
+            {
+                setThreadedForumRefreshButtonCallback buttonCallback = new setThreadedForumRefreshButtonCallback(setThreadedRefreshForumButton);
+                this.obj.Invoke(buttonCallback, status);
+            }
+            else
+            {
+                this.ForumRefreshButton.Enabled = status;
+
+            }
+        }
         private void setThreadedChangeForumButton(bool status)
         {
             if (this.ForumChangeButton.InvokeRequired)
@@ -186,10 +246,11 @@ namespace DayTime
                 int size = socketFd.EndReceive(ar);
                 string a;
                 char b;
+                
                 state.m_StringBuilder.Append(Encoding.ASCII.GetString(state.m_DataBuf, 0, size));
                 /* get the rest of the data */
                 a = state.m_StringBuilder.ToString();
-                b = a[a.Length - 1]; 
+                b = a[a.Length - 1];
                 if (b == '\n')
                 {
                     /* all the data has arrived */
@@ -197,42 +258,110 @@ namespace DayTime
                     MessageBox.Show("jjj" + a+"j");
                     switch (a[0])
                         {
-                            case 'Y':
-                                this.Show();
-                                mainForm.Hide();
-                                break;
-                            case 'N':
-                                MessageBox.Show("Blad logowania");
-                                break;
-                            case '2':
-                                setThreadedChatbox1(a.Substring(1));
-                                break;
-                            case '1':
-                                setThreadedChatbox1(a.Substring(1));
-                                this.setThreadedtextBox4Forumname(a.Substring(1));
-                            break;
-                            case '3':
-                                socketFd.Shutdown(SocketShutdown.Both);
-                                socketFd.Close();
-                                this.mainForm.Show();
-                                this.Close(); 
-                                
-                                break;
-                            case '4':
+                        case '0':
+                            switch (a[1])
+                            {
+                                case 'Y':
+                                    setThreadedLogoutButton1(true);
+                                    SocketStateObject2 state0 = new SocketStateObject2();
+                                    state0.m_SocketFd = fd;
+                                    state0.msg = "";
+                                    state0.flag = 7;
+                                    byte[] Buf0;
+                                    string mess0;
+                                    mess0 = state0.flag.ToString() + "\n" + state0.msg.Length + "\n" + state0.msg;
+                                    Buf0 = Encoding.ASCII.GetBytes(mess0);
+                                    fd.Send(Buf0, Buf0.Length, 0);
 
-                                break;
-                            case '5':
-                                    
-                                break;
-                            case '7':
-                                setThreadedForumListBox(a.Substring(1));
-                                break;
-                            case '8':
-                                setThreadedUserListBox(a.Substring(1));
-                                break;
-                            default:
-                                break;
-                        }
+                                    setThreadedRefreshForumButton(true);
+                                    setThreadedChangeForumButton(true);
+                                    setThreadedAddForumButton(true);
+                                    setThreadedDeleteForumButton(true);
+                                    //this.Hide();
+                                    //mainForm.Hide();
+                                    break;
+                                case 'N':
+                                    MessageBox.Show("Blad logowania");                                    
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 'c':
+                            switch (a[1])
+                            {
+                                case 'Y':
+                                    SocketStateObject2 state0 = new SocketStateObject2();
+                                    state0.m_SocketFd = fd;
+                                    state0.msg = "";
+                                    state0.flag = 7;
+                                    byte[] Buf0;
+                                    string mess0;
+                                    mess0 = state0.flag.ToString() + "\n" + state0.msg.Length + "\n" + state0.msg;
+                                    Buf0 = Encoding.ASCII.GetBytes(mess0);
+                                    fd.Send(Buf0, Buf0.Length, 0);
+
+                                    setThreadedRefreshUserButton(true);
+                                    setThreadedUserWriteButton(true);
+                                    setThreadedSendButton(true);
+                                    break;
+                                case 'N':
+                                    MessageBox.Show("Nie znaleziono");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case '2':
+                            setThreadedChatbox1(a.Substring(1));
+                            break;
+                        case '1':
+                            setThreadedChatbox2(a.Substring(1));
+                            this.setThreadedtextBox4Forumname(a.Substring(1));
+                            break;
+                        case '3':
+                            socketFd.Shutdown(SocketShutdown.Both);
+                            socketFd.Close();
+                            this.mainForm.Show();
+                            this.Close(); 
+                                
+                            break;
+                        case 'b':
+                            switch (a[1])
+                            {
+                                case 'Y':
+                                    SocketStateObject2 state2 = new SocketStateObject2();
+                                    state2.m_SocketFd = fd;
+                                    state2.msg = "";
+                                    state2.flag = 7;
+                                    byte[] Buf2;
+                                    string mess2;
+                                    mess2 = state2.flag.ToString() + "\n" + state2.msg.Length + "\n" + state2.msg;
+                                    Buf2 = Encoding.ASCII.GetBytes(mess2);
+                                    fd.Send(Buf2, Buf2.Length, 0);
+
+                                    break;
+                                case 'N':
+                                    MessageBox.Show("Zla nazwa");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 'a':
+                            this.setThreadedtextBox4Forumname("");
+                            MessageBox.Show("Forum zostalo usuniete");
+
+                            break;
+                        case '7':
+                            setThreadedForumListBox(a.Substring(1));
+                            break;
+                        case '8':
+                            setThreadedUserListBox(a.Substring(1));
+                            break;
+                        default:
+                            break;
+                    }
                     state = null;
                     state = new SocketStateObject2();
                         
@@ -422,13 +551,7 @@ namespace DayTime
 
         }
 
-        private void testButton_Click(object sender, EventArgs e)
-        {
-            SocketStateObject2 state = new SocketStateObject2();
-            state.m_SocketFd = fd;
-            state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, 1, 0, new AsyncCallback(ReceiveCallback2), state);
-        }
-
+       
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
