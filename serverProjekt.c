@@ -311,7 +311,7 @@ void* cthread(void* arg){
                 sendMessage(c->cfd, "3\n");
                 break;
             case '4':
-                //utworzenie nowego serwera
+                //utworzenie nowego forum
                 ifCorrectName=1;
                 printf("Opcja4\n");
                 for(int i=0;i<10;i++){
@@ -327,7 +327,9 @@ void* cthread(void* arg){
                     for(int i=0;i<10;i++){
                         if(forums[i].name[0] == '-'){
                             FILE *history = fopen( historyForum[i], "w");
-                            sendMessage(c->cfd, "bN\n");
+	//********************************************************************************
+                            sendMessage(c->cfd, "bN\n");//tutaj bY?????????
+	//********************************************************************************
                             strcpy( forums[i].name, msgFromClient);
                             fprintf(history, "%s\n", msgFromClient);
                             fclose(history);
