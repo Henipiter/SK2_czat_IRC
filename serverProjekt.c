@@ -435,7 +435,7 @@ void* cthread(void* arg){
                     printf("Nie ma takiego uzytkownika\n");
                     sendMessage(c->cfd, "cN\n");
                 }
-                printf("Zakończono proces prywatnej wiadomosci\n"
+                printf("Zakończono proces prywatnej wiadomosci\n");
                 break;
             case '7':
                 //zwrocenie nazw dostepnych forów
@@ -462,7 +462,6 @@ void* cthread(void* arg){
                 
                 if(users[index_user].index_forum!=-1){
                     for(int i=0;i<forums[users[index_user].index_forum].countUser;i++){
-                        forums[users[index_user].index_forum].countUser,forums[users[index_user].index_forum].username[i]);
                         strcat(msgToClient, forums[users[index_user].index_forum].username[i]);
                         strcat(msgToClient, "\t");
                     }
@@ -500,7 +499,7 @@ int main(int argc, char** argv){
         struct cln* c = malloc(sizeof(struct cln));
         slt = sizeof(c->caddr);
         c->cfd = accept(sfd, (struct sockaddr*)&c->caddr, &slt);
-        printf("new\n");
+        printf("Nowe polaczenie\n");
         pthread_create(&tid, NULL, cthread, c);
         pthread_detach(tid);
     }
