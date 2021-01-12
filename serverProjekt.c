@@ -311,14 +311,19 @@ void* cthread(void* arg){
             case '3':
                 printf("Opcja3 - Wyloguj\n");
                 //nastepuje wylogowanie z wyslaniem wiadomosci potwierdzającej klientowi
-                for(int j=0;j< forums[ users[index_user].index_forum ].countUser;j++){
-                    int cfdd = forums[users[index_user].index_forum].id_users[j];
-                    sendMessage(cfdd, "e\n");
+                if(users[index_user].index_forum!=-1){
+                    for(int j=0;j< forums[ users[index_user].index_forum ].countUser;j++){
+                        int cfdd = forums[users[index_user].index_forum].id_users[j];
+                        sendMessage(cfdd, "e\n");
+                    }   
                 }
                 users[index_user].logged =0;
                 logged = 0;
                 index_user=-1;
-                leaveForum(index_user, c->cfd);
+                printf("czy to t\n");
+                //leaveForum(index_user, c->cfd);
+                
+                printf("czy to ttttt\n");
                 showForum();
                 sendMessage(c->cfd, "3\n");
                 printf("Wylogowano\n"); 
