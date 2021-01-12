@@ -21,6 +21,7 @@ struct user_data{
     int logged; //czy jest zalogowany
     char* password; //haslo uzytkownika
     int index_forum; //forum do ktorego nalezy uzytkownik. Potrzebne przy zmianie forum
+    int id;
 };
 struct forum_data{
     int id_users[9]; //id socketu
@@ -67,6 +68,7 @@ void setup(){
     len=0;
     for( int i=0;i<9;i++){
         users[i].logged = 0;
+        users[i].id = -1;
         getline(&users[i].name, &len, fileUser);
         strtok(users[i].name, "\n"); 
         users[i].index_forum = -1;
@@ -174,6 +176,7 @@ void* cthread(void* arg){
                     //gdy login i haslo sie zgadzaja
                     users[i].logged = 1;
                     logged=1;
+                    users[i].id = c->cfd;
                     index_user = i;
                     printf("Uzytkownik %s zalogowany\n", login);
                     countNewLine=0;
@@ -183,7 +186,7 @@ void* cthread(void* arg){
             }
         }
         if(logged==0){
-            printf("blad logowania\n");
+            printf("Blad logowania\n");
             sendMessage(c->cfd, "0N\n");
             countNewLine=0;
         }
@@ -318,6 +321,7 @@ void* cthread(void* arg){
                     }   
                 }
                 users[index_user].logged =0;
+                users[i].id = -1;
                 logged = 0;
                 index_user=-1;
                 printf("czy to t\n");
@@ -349,9 +353,11 @@ void* cthread(void* arg){
                             fprintf(history, "%s\n", msgFromClient);
                             fclose(history);
                             i=10;
-                            for(int j=0;j< forums[ users[index_user].index_forum ].countUser;j++){
-                                int cfdd = forums[users[index_user].index_forum].id_users[j];
-                                sendMessage(cfdd, "f\n"); //wysylanie klientowi informacji, by zaktualizowal liste forum poprzez wyslanie zapytania do serwera
+                            for(int j=0;j< 9;j++){
+                                if(users[j].logged==1){
+                                    int cfdd = users[j].id;
+                                    sendMessage(cfdd, "f\n");
+                                }
                             }
                         }
                     }
@@ -376,10 +382,10 @@ void* cthread(void* arg){
                             forums[i].id_users[j] = 0;
                             forums[i].username[j][0] = '\0';
                         }
-                        for(int j=0;j< 10;j++){
-                            for(int k=0;k< forums[j].countUser; k++){
-                                int cfdd = forums[j].id_users[k];
-                                sendMessage(cfdd, "f\n"); //by klient zaktualizowal liste forum
+                        for(int j=0;j< 9;j++){
+                            if(users[j].logged==1){
+                                int cfdd = users[j].id;
+                                sendMessage(cfdd, "f\n");
                             }
                         }
                         if( i == users[index_user].index_forum){
