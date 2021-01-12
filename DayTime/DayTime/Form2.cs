@@ -10,6 +10,10 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 
+/*
+ * Główne okienko
+ */
+
 namespace DayTime
 {
     public partial class Form2 : Form
@@ -51,7 +55,7 @@ namespace DayTime
             //receive(fd);
         }
 
-        private void setThreadedSendButton(bool status)
+        private void setThreadedSendButton(bool status)//funkcja aktualizująca przycisk wysyłania wiadomości
         {
             if (this.SendButton.InvokeRequired)
             {
@@ -64,7 +68,7 @@ namespace DayTime
 
             }
         }
-        private void setThreadedLogoutButton1(bool status)
+        private void setThreadedLogoutButton1(bool status)//funkcja aktualizująca przycisk logowania
         {
             if (this.button1.InvokeRequired)
             {
@@ -77,7 +81,7 @@ namespace DayTime
 
             }
         }
-        private void setThreadedRefreshUserButton(bool status)
+        private void setThreadedRefreshUserButton(bool status)//funkcja aktualizująca przycisk odświeżania listy członków forum
         {
             if (this.UserRefreshButton.InvokeRequired)
             {
@@ -90,7 +94,7 @@ namespace DayTime
 
             }
         }
-        private void setThreadedRefreshForumButton(bool status)
+        private void setThreadedRefreshForumButton(bool status)//funkcja aktualizująca przycisk odświeżania listy forów
         {
             if (this.ForumRefreshButton.InvokeRequired)
             {
@@ -103,7 +107,7 @@ namespace DayTime
 
             }
         }
-        private void setThreadedChangeForumButton(bool status)
+        private void setThreadedChangeForumButton(bool status)//funkcja aktualizująca przycisk zmiany forum
         {
             if (this.ForumChangeButton.InvokeRequired)
             {
@@ -116,7 +120,7 @@ namespace DayTime
                 
             }
         }
-        private void setThreadedAddForumButton(bool status)
+        private void setThreadedAddForumButton(bool status)//funkcja aktualizująca przycisk dodawania forum
         {
             if (this.ForumAddButton.InvokeRequired)
             {
@@ -128,7 +132,7 @@ namespace DayTime
                 this.ForumAddButton.Enabled = status;
             }
         }
-        private void setThreadedDeleteForumButton(bool status)
+        private void setThreadedDeleteForumButton(bool status)//funkcja aktualizująca przycisk usuwania forum
         {
             if (this.ForumDeleteButton.InvokeRequired)
             {
@@ -140,7 +144,7 @@ namespace DayTime
                 this.ForumDeleteButton.Enabled = status;
             }
         }
-        private void setThreadedUserWriteButton(bool status)
+        private void setThreadedUserWriteButton(bool status)//funkcja aktualizująca przycisk wiadomości prywatnej 
         {
             if (this.UserWriteButton.InvokeRequired)
             {
@@ -153,7 +157,7 @@ namespace DayTime
             }
         }
 
-        private void setThreadedtextBox3Username(String text)
+        private void setThreadedtextBox3Username(String text)//funkcja aktualizująca treść pola zawierającego nazwę zalogowanego urzytkownika
         {
             if (this.textBox3.InvokeRequired)
             {
@@ -165,7 +169,7 @@ namespace DayTime
                 this.textBox3.Text = text;
             }
         }
-        private void setThreadedtextBox4Forumname(String text)
+        private void setThreadedtextBox4Forumname(String text)//funkcja aktualizująca treść pola zawierającego nazwę aktualnego forum
         {
             if (this.textBox4.InvokeRequired)
             {
@@ -179,7 +183,7 @@ namespace DayTime
             }
         }
 
-        public void setThreadedForumListBox(String text)
+        public void setThreadedForumListBox(String text)//funkcja aktualizująca treść pola zawierającego listę dostępnych forów
         {
             if (this.ForumListBox.InvokeRequired)
             {
@@ -193,7 +197,7 @@ namespace DayTime
             }
         }
 
-        public void setThreadedUserListBox(String text)
+        public void setThreadedUserListBox(String text)//funkcja aktualizująca treść pola zawierającego listę zalogowanych urzytkowników na aktualnym forum
         {
             if (this.UserListBox.InvokeRequired)
             {
@@ -207,7 +211,7 @@ namespace DayTime
             }
         }
 
-        public void setThreadedChatbox1(String text)
+        public void setThreadedChatbox1(String text)//funkcja aktualizująca treść pola zawierającego aktualny czat dodając nową wiadomość
         {
             if (this.textBox1.InvokeRequired)
             {
@@ -220,7 +224,7 @@ namespace DayTime
                 this.textBox1.Text += text;
             }
         }
-        public void setThreadedChatbox2(String text)
+        public void setThreadedChatbox2(String text)//funkcja aktualizująca treść pola zawierającego aktualny czat (nadpisując go)
         {
             if (this.textBox1.InvokeRequired)
             {
@@ -251,103 +255,103 @@ namespace DayTime
                 /* get the rest of the data */
                 a = state.m_StringBuilder.ToString();
                 b = a[a.Length - 1];
-                if (b == '\n')
+                if (b == '\n')// gdy odebrany znak jest równy \n odczytana została cała wiadomość
                 {
                     /* all the data has arrived */
 
-                    switch (a[0])
+                    switch (a[0])//pierwszy odebrany znak jest znakiem funkcyjnym 
                         {
-                        case '0':
-                            switch (a[1])
+                        case '0':// case 0 obsługuje logowanie
+                            switch (a[1])// 2 przesłany znak informuje o powodzeniu/niepowodzeniu logowania
                             {
-                                case 'Y':
+                                case 'Y'://powodzenie
                                     setThreadedLogoutButton1(true);
                                     string mess0 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
                                     byte[] Buf0 = Encoding.ASCII.GetBytes(mess0);
-                                    fd.Send(Buf0, Buf0.Length, 0);
-                                    setThreadedRefreshForumButton(true);
+                                    fd.Send(Buf0, Buf0.Length, 0);//wysłanie do servera komunikatu o odświeżeniu listy dostępnych forów
+                                    setThreadedRefreshForumButton(true); // aktualizacja przycisków
                                     setThreadedChangeForumButton(true);
                                     setThreadedAddForumButton(true);
                                     setThreadedDeleteForumButton(true);
                                     //this.Hide();
                                     //mainForm.Hide();
                                     break;
-                                case 'N':
+                                case 'N'://niepowodzenie
                                     MessageBox.Show("Blad logowania");                                    
                                     break;
                                 default:
                                     break;
                             }
                             break;
-                        case 'c':
-                            switch (a[1])
+                        case 'c'://case c obsługoje informację zmianie forum
+                            switch (a[1])//2 znak zawiera informację o sukcesie/porażce
                             {
-                                case 'Y':
+                                case 'Y'://sukces
                                     string mess0 = 8.ToString() + "\n" + 0.ToString() + "\n" + "";
                                     byte[] Buf0 = Encoding.ASCII.GetBytes(mess0);
                                     fd.Send(Buf0, Buf0.Length, 0);
                                     mess0 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
                                     Buf0 = Encoding.ASCII.GetBytes(mess0);
-                                    fd.Send(Buf0, Buf0.Length, 0);
-                                    setThreadedRefreshUserButton(true);
+                                    fd.Send(Buf0, Buf0.Length, 0);//wysłanie do serwera komunikatu o chęci odświeżenia listy urzytkowników
+                                    setThreadedRefreshUserButton(true);//aktualizacja  przycisków
                                     setThreadedUserWriteButton(true);
                                     setThreadedSendButton(true);
                                     break;
-                                case 'N':
+                                case 'N'://porażka
                                     MessageBox.Show("Nie znaleziono");
                                     break;
                                 default:
                                     break;
                             }
                             break;
-                        case 'e':
+                        case 'e'://serwer informuje o zmianie na liście urzytkowników
                             string mess1 = 8.ToString() + "\n" + 0.ToString() + "\n" + "";
                             byte[] Buf1 = Encoding.ASCII.GetBytes(mess1);
-                            fd.Send(Buf1, Buf1.Length, 0);
+                            fd.Send(Buf1, Buf1.Length, 0);//wysłanie do serwera komunikatu o chęci odświeżenia listy urzytkowników
                             break;
 
-                        case 'f':
+                        case 'f'://serwer informuje o zmianie na liście dostępnych forów
                             mess1 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
                             Buf1 = Encoding.ASCII.GetBytes(mess1);
-                            fd.Send(Buf1, Buf1.Length, 0);
+                            fd.Send(Buf1, Buf1.Length, 0);//wysłanie do serwera komunikatu o chęci odświeżenia listy forów
                             break;
-                        case 'd':
-                            switch (a[1])
+                        case 'd'://case d obsługoje informację o procesie usuwania forum
+                            switch (a[1])//2 znak zawiera informację o sukcesie/porażce
                             {
-                                case 'Y':
+                                case 'Y'://sukces
                                     string mess0 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
                                     byte[] Buf0 = Encoding.ASCII.GetBytes(mess0);
-                                    fd.Send(Buf0, Buf0.Length, 0);
+                                    fd.Send(Buf0, Buf0.Length, 0);//wysłanie do serwera informacji o chęci odświeżenia listy forów
                                     
-                                    setThreadedRefreshUserButton(false);
+                                    setThreadedRefreshUserButton(false);//aktualizacja przycisków (blokada przycisków obsługujących forum)
                                     setThreadedUserWriteButton(false);
                                     setThreadedSendButton(false);
                                     break;
-                                case 'N':
+                                case 'N'://porażka
                                     MessageBox.Show("Nie znaleziono");
                                     break;
                                 default:
                                     break;
                             }
                             break;
-                        case '2':
-                            setThreadedChatbox1(a.Substring(1));
+                        case '2'://nowa wiadomość
+                            setThreadedChatbox1(a.Substring(1));//wyświetlanie nowej wiadomości
                             break;
-                        case '1':
-                            setThreadedChatbox2(a.Substring(1));
-                            this.setThreadedtextBox4Forumname(a.Substring(1));
+                        case '1'://nowa wiadomość zawierająca nazwę forum
+                            setThreadedChatbox2(a.Substring(1));//wyświetlanie nowej wiadomości przy czym pole czatu jest czyszczone
+                            this.setThreadedtextBox4Forumname(a.Substring(1));//zaktualizowanie pola zawierającego nazwę forum
                             break;
-                        case '3':
+                        case '3'://wylogowanie
                             socketFd.Shutdown(SocketShutdown.Both);
                             socketFd.Close();
                             this.mainForm.Show();
                             this.Close(); 
                                 
                             break;
-                        case 'b':
-                            switch (a[1])
+                        case 'b'://case b obsługoje informację o procesie dodawania nowego forum
+                            switch (a[1])//2 znak zawiera informację o sukcesie/porażce
                             {
-                                case 'Y':
+                                case 'Y'://sukces
                                     SocketStateObject2 state2 = new SocketStateObject2();
                                     state2.m_SocketFd = fd;
                                     state2.msg = "";
@@ -356,31 +360,31 @@ namespace DayTime
                                     string mess2;
                                     mess2 = state2.flag.ToString() + "\n" + state2.msg.Length + "\n" + state2.msg;
                                     Buf2 = Encoding.ASCII.GetBytes(mess2);
-                                    fd.Send(Buf2, Buf2.Length, 0);
+                                    fd.Send(Buf2, Buf2.Length, 0);//wysłanie do serwera informacji o chęci odświeżenia listy forów
 
                                     break;
-                                case 'N':
+                                case 'N'://porażka
                                     MessageBox.Show("Zla nazwa");
                                     break;
                                 default:
                                     break;
                             }
                             break;
-                        case 'a':
-                            this.setThreadedtextBox4Forumname("");
+                        case 'a'://wysyłane do urzytkowników znajdujących się na usuniętym forum
+                            this.setThreadedtextBox4Forumname("");//czyszczenie okienek
                             this.setThreadedUserListBox("");
                             this.setThreadedChatbox2("");
-                            setThreadedRefreshUserButton(false);
+                            setThreadedRefreshUserButton(false);//blokada przycisków obsługujących forum
                             setThreadedUserWriteButton(false);
                             setThreadedSendButton(false);
 
                             MessageBox.Show("Forum zostalo usuniete");
 
                             break;
-                        case '7':
+                        case '7'://aktualizuje wyświetlaną listę dostępnych forów
                             setThreadedForumListBox(a.Substring(1));
                             break;
-                        case '8':
+                        case '8'://aktualizuje wyświetlaną listę dostępnych urzytkownikó na aktualnym forum
                             setThreadedUserListBox(a.Substring(1));
                             break;
                         
@@ -401,7 +405,7 @@ namespace DayTime
         }
        
         
-        private void ForumRefreshButton_Click(object sender, EventArgs e)
+        private void ForumRefreshButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk odświeżania listy forów
         {
             SocketStateObject2 state = new SocketStateObject2();
             state.m_SocketFd = fd;
@@ -412,23 +416,19 @@ namespace DayTime
             mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
             Buf = Encoding.ASCII.GetBytes(mess);
             
-           // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.Send(Buf, Buf.Length, 0);
+            fd.Send(Buf, Buf.Length, 0);//wysłanie do serwera informacji o chęci odświeżenia listy forów
 
-           // StartReceiveMess();
+            // StartReceiveMess();
             //MessageBox.Show(":::"+state.m_StringBuilder.ToString());
         }
-        private void ForumAddButton_Click(object sender, EventArgs e)
+        private void ForumAddButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk dodawania nowego forum
         {
 
-            //SocketStateObject2 state = new SocketStateObject2();
-            //state.m_SocketFd = fd;
-            //state.m_SocketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback2), state);
-            Form4 frm = new Form4(fd, endPoint,4);
+            Form4 frm = new Form4(fd, endPoint,4);//tworzen nowego okienka w którym wpisana zostanie nazwa nowego forum
             frm.Show();
 
         }
-        private void SendButton_Click(object sender, EventArgs e)
+        private void SendButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk wysłania wiadomości na forum
         {
             SocketStateObject2 state = new SocketStateObject2();
             state.m_SocketFd = fd;
@@ -441,14 +441,14 @@ namespace DayTime
             Buf = Encoding.ASCII.GetBytes(mess);
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.Send(Buf, Buf.Length, 0);
+            fd.Send(Buf, Buf.Length, 0);//wysłanie do serwera
         }
 
         
 
-        private void ForumDeleteButton_Click(object sender, EventArgs e)
+        private void ForumDeleteButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk ususwania forum
         {
-            Form4 frm = new Form4(fd, endPoint, 5);
+            Form4 frm = new Form4(fd, endPoint, 5);//tworzen nowego okienka w którym wpisana zostanie nazwa usuwanego forum
             frm.Show();
         }
 
@@ -474,7 +474,7 @@ namespace DayTime
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)//funcja obsługująca przycisk wylogowania
         {
             SocketStateObject2 state = new SocketStateObject2();
             state.m_SocketFd = fd;
@@ -486,7 +486,7 @@ namespace DayTime
             Buf = Encoding.ASCII.GetBytes(mess);
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.Send(Buf, Buf.Length, 0);
+            fd.Send(Buf, Buf.Length, 0);//wysłąnie informacji do serwera o wylogowaniu
 
         }
 
@@ -495,13 +495,13 @@ namespace DayTime
 
         }
 
-        private void UserWriteButton_Click(object sender, EventArgs e)
+        private void UserWriteButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk wiadomości prywatnej
         {
-            Form3 frm = new Form3(fd, endPoint);
+            Form3 frm = new Form3(fd, endPoint);//tworzen nowego okienka w którym wpisana zostanie nazwa urzytkownika i treść wiadomości
             frm.Show();
         }
 
-        private void UserRefreshButton_Click(object sender, EventArgs e)
+        private void UserRefreshButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk odświeżania listy dostępnych urzytkownów
         {
 
             SocketStateObject2 state = new SocketStateObject2();
@@ -514,9 +514,9 @@ namespace DayTime
             Buf = Encoding.ASCII.GetBytes(mess);
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.Send(Buf, Buf.Length, 0);
+            fd.Send(Buf, Buf.Length, 0); ;//wysłąnie informacji do serwera o chęci odświeżenia listy urzytkowników
         }
-        public void startReceive()
+        public void startReceive()//funkcja rozpoczynająca odbieranie wiadomości od serwera
         {
             SocketStateObject2 state = new SocketStateObject2();
             state.m_SocketFd = fd;
@@ -527,10 +527,10 @@ namespace DayTime
 
         }
 
-        private void ForumChangeButton_Click(object sender, EventArgs e)
+        private void ForumChangeButton_Click(object sender, EventArgs e) //funcja obsługująca przycisk zmiany forum
         {
-            Form4 frm = new Form4(fd, endPoint, 1);
-            this.textBox1.Text = null;
+            Form4 frm = new Form4(fd, endPoint, 1);//tworzenie nowego okienka do wpisania nazwy forum
+            this.textBox1.Text = null;//czyszczenie czatu
             frm.Show();
         }
 

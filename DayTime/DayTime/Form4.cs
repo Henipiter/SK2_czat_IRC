@@ -10,6 +10,10 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 
+/*
+ * Okienko obslugujace dodawanie/usuwanie/zmiane forum
+ */
+
 namespace DayTime
 {
     public partial class Form4 : Form
@@ -25,7 +29,7 @@ namespace DayTime
             this.fd = socketFd;
             this.endPoint = end;
             this.function = func;
-            if (this.function == 4) 
+            if (this.function == 4) //aktualizacia okienka w zależności od wykonywanego polecenia
             {
                 this.AddBox.Text ="Add forum";
                 this.AddButton.Text = "Add";
@@ -57,19 +61,19 @@ namespace DayTime
 
         }
 
-        private void AddButton_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)////funcja obsługująca przycisk dodawania/usuwania/zmiany forum
         {
             SocketStateObject4 state = new SocketStateObject4();
             state.m_SocketFd = fd;
             state.msg = this.NameBox.Text.ToString();
-            state.flag = this.function;
+            state.flag = this.function;//ustawienie flagi polecenia
             byte[] Buf;
             string mess;
             mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
             Buf = Encoding.ASCII.GetBytes(mess);
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.Send(Buf, Buf.Length, 0);
+            fd.Send(Buf, Buf.Length, 0);//wysłanie polecenia do serwera
             
             this.Close();
         }

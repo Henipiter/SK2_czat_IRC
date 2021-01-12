@@ -11,15 +11,16 @@ using System.Threading;
 
 /*
  * $Id: Form1.cs,v 1.1 2006/10/24 19:32:59 mkalewski Exp $
+ * Okienko Logowania
  */
 
 namespace DayTime
 {
     public partial class Form1 : Form
     {
-        private Form obj;
-        private Form2 frm;
-        private Socket fd;
+        private Form obj; 
+        private Form2 frm; 
+        private Socket fd; 
         private IPEndPoint endPoint = null;
         delegate void setThreadedTextBoxCallback(String text);
         delegate void setThreadedStatusLabelCallback(String text);

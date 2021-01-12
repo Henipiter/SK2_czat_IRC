@@ -9,6 +9,10 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Net;
 
+/*
+ * Okienko prywatnej wiadomosci
+ */
+
 namespace DayTime
 {
     public partial class Form3 : Form
@@ -52,7 +56,7 @@ namespace DayTime
 
         }
 
-        private void sendButton_Click(object sender, EventArgs e)
+        private void sendButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk wysłania wiadomości prywatnej
         {
             SocketStateObject3 state = new SocketStateObject3();
             state.m_SocketFd = fd;
@@ -66,7 +70,7 @@ namespace DayTime
             mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
             Buf = Encoding.ASCII.GetBytes(mess);
 
-            fd.Send(Buf, Buf.Length, 0);
+            fd.Send(Buf, Buf.Length, 0);//wysłanie wiadomości do serwera
             this.Close();
         }
         public class SocketStateObject3
