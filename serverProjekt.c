@@ -39,7 +39,7 @@ char historyForum[10][11] = {
 struct user_data users[9];
 struct forum_data forums[10];
 
-//funkcja wyswietlajaca nazwe forum, ilosc zalogowanych na niego uzytkownikow oraz ID i nazwe uzytkownikow
+//funkcja wyswietlajaca nazwe forum, ilosc zalogowanych na niego uzytkownikow oraz ID i nazwe uzytkownikow [debug]
 void showForum(){
     for(int i=0;i<10;i++){
         printf("%d: %s %d\n", i, forums[i].name, forums[i].countUser); 
@@ -88,6 +88,7 @@ void setup(){
     fclose(fileForum);
 }
 //funkcja dzieki ktorej podany uzytkownik zostaje wylogowany z forum na ktorym jest zalogowany
+//usuwanie uzytkownika polega na zamienienie pozycją wybranego użytkownika i ostatniego zalogowanego. Nastepnie dane struktury dot. uzytkownika są czyszczone
 void leaveForum(int index_user, int cfd){
     for(int j=0; j<9;j++){  
         int indexOfForum = users[index_user].index_forum;
@@ -129,21 +130,21 @@ int compare(char* str1, char* str2){
     return 1;
 }
 
-
+//obsluga watku
 void* cthread(void* arg){
-    char msgFromClient[1024];
-    int ifCorrectName;
-    char msgToClient[1024];
-    char login[256] = {'w'};
-    char password[256] = {'w'};
+    char msgFromClient[1024]; //tutaj zapisywana jest wiadomosc przyslana od klienta
+    int ifCorrectName; //flaga uzywana do wysylania komunikatow do klienta nt. poprawnosci wykonywanych operacji (np. poprawnosc loginu i hasla)
+    char msgToClient[1024]; //tu zapisywana jest odpowiedz na zapytanie klienta
+    char login[256] = {'w'}; //zmienna przechowujaca login uzytkownika
+    char password[256] = {'w'};//zmienna przechowujaca haslo uzytkownika
     int counter;
-    int index_user=-1;
-    int countNewLine = 0;
-    int logged;
-    char flag;
+    int index_user=-1; //informacja o uzytkoniku - index w strukturze uzytkownikow
+    int countNewLine = 0; //licznik znakow nowej linii \n
+    int logged; //flaga, mowiaca czy uzytkownik jest zalogowany
+    char flag;  //typ odbieranej wiadomosci od klienta
     int size=0;
     int i=0;
-    int password_iter, login_iter;
+    int password_iter, login_iter; //zmienne sluzace do zapisu loginu i hasla z wiadomosci od klienta
     logged = 0;   
     struct cln* c = (struct cln*)arg;
     //funkcja logowania
@@ -154,11 +155,11 @@ void* cthread(void* arg){
         //   [login]\n[haslo]\n
         while(countNewLine <2){
             read(c->cfd, msgFromClient, 1);
-            if (countNewLine == 0 && msgFromClient[0] != '\n'){
+            if (countNewLine == 0 && msgFromClient[0] != '\n'){ //zapis loginu
                 login[login_iter] = msgFromClient[0];
                 login_iter++;
             }
-            if (countNewLine == 1 && msgFromClient[0] != '\n'){
+            if (countNewLine == 1 && msgFromClient[0] != '\n'){ //zapis hasla
                 password[password_iter] = msgFromClient[0];
                 password_iter++;
             }
@@ -170,11 +171,11 @@ void* cthread(void* arg){
         for( int i=0;i<9;i++){
             if(compare(login, users[i].name) && (users[i].logged==0)){
                 if(compare(password, users[i].password)){
-                    //login i haslo sie zgadzaja
+                    //gdy login i haslo sie zgadzaja
                     users[i].logged = 1;
                     logged=1;
                     index_user = i;
-                    printf("zalogowanyy\n");
+                    printf("Uzytkownik %s zalogowany\n", login);
                     countNewLine=0;
                     sendMessage(c->cfd, "0Y\n"); //wyslanie informacji zwrotnej do klienta
                     i=9; 
@@ -213,13 +214,12 @@ void* cthread(void* arg){
         countNewLine=0;
         msgFromClient[0]='\0';
         counter=0;
-        while(i < size){ //odczytanie wiadomosci
+        while(i < size){ //odczytanie wiadomosci o okreslonej liczbie znakow
             counter = read(c->cfd, msgFromClient+i, 1024);
-            printf("Bufor: %c %s %d %ld\n", flag, msgFromClient, size, strlen(msgFromClient));
             i+= counter;
         }
         msgFromClient[size] = '\0';
-        printf("Bufor: %c %s %d\n", flag, msgFromClient, size);
+        printf("Nowa wiadomosc: %c %s %d\n", flag, msgFromClient, size);
        
         /*
         * 1 - wybierz(dolacz) forum 
@@ -234,28 +234,20 @@ void* cthread(void* arg){
         */
         switch( flag ){
             case '1':
-                printf("Opcja1\n");
+                printf("Opcja1 - Dolacz do forum\n");
                 ifCorrectName=0;
                 for(int i=0;i<10;i++){
-                    if(forums[i].name[0] != '-'){
-                        
-                        
-                        if(compare( forums[i].name, msgFromClient)){
-                            
-                            
+                    if(forums[i].name[0] != '-'){ //jesli forum nie jest puste
+                        if(compare( forums[i].name, msgFromClient)){ //jesli nazwa forum zgadza sie z nazwa podana przez klienta
                             forums[i].id_users[ forums[i].countUser] = c->cfd; //zapisanie id do wybranego forum
-                            
                             if(users[index_user].index_forum != -1){ //jeżeli użytkownik jest w jakimś forum
                                 for(int j=0;j< forums[users[index_user].index_forum].countUser;j++){
                                     int cfdd = forums[users[index_user].index_forum].id_users[j];
-                                    sendMessage(cfdd, "e\n");
+                                    sendMessage(cfdd, "e\n"); //wyslij wszystkim obecnym uzytkownikom, ktorzy sa na forum przed jego zmiana, aby odswiezyli liste uzytkownikow
                                 }
-                                printf("AAAAAAAAAAAAAAAAAAAA\n");
-                                showForum();
                                 leaveForum(index_user, c->cfd); //usun uzytkownika z biezacego forum
-                                showForum();
                             }
-                            users[index_user].index_forum = i;
+                            users[index_user].index_forum = i; //przypisz indeks forum do uzytkownika
                             strcpy(forums[i].username[forums[i].countUser],users[index_user].name); //zapisz uzytkownika na ostatnie wolne miejsce
                             forums[i].countUser++;
                             ifCorrectName=1;
@@ -264,15 +256,14 @@ void* cthread(void* arg){
                             char* historyMessege;
                             //odczyt pliku z historia
                             FILE *hist = fopen( historyForum[ users[index_user].index_forum], "rt");
-                            printf("wysylanie...\n");
+                            printf("Wysylanie historii forum\n");
                             int first=0;
                             for(int j=0;j< forums[users[index_user].index_forum].countUser;j++){
                                 int cfdd = forums[users[index_user].index_forum].id_users[j];
                                 sendMessage(cfdd, "e\n");
-                            }       
-                            
-                            
-                            while(getline(&historyMessege, &len, hist) >0){
+                            }
+                            //wysylanie zawartosci forum nie jest wysylane raz. Wysylane są po kolei wiadomosci. Pierwsza wiadomosc z flaga 1 oznacza, ze klient ma wykasowac pole czatu, natomiast 2 oznacza, ze ja ma dopisac.
+                            while(getline(&historyMessege, &len, hist) >0){ 
                                 msgToClient[0] = '\0';
                                 if(first==0){
                                     strcat(msgToClient, "1");
@@ -285,7 +276,7 @@ void* cthread(void* arg){
                                 printf("%s %ld\n", msgToClient, strlen(msgToClient) );
                                 sendMessage(c->cfd, msgToClient); //wyslanie do klienta historii
                             }
-                            printf("Wyslano\n");
+                            printf("Wyslano historie\n");
                             fclose(hist);
                         }
                     }
@@ -294,91 +285,84 @@ void* cthread(void* arg){
                     printf("nie ma takiego forum\n");
                     sendMessage(c->cfd, "cN\n");
                 }
+                printf("Zakonczono operacje 1\n");
                 showForum();
                 break;
             case '2':
-                printf("Opcja2\n");
+                printf("Opcja2 - napisz na forum\n");
                 //wyslanie do uczestnikow forum wiadomosci. Wiadomosc zostaje zapisana w pliku historii serwera
                 for(int i=0;i<forums[ users[index_user].index_forum].countUser;i++){
                     int cfdd = forums[ users[index_user].index_forum ].id_users[i];
-                    printf("cfd: %d %d\n", counter, size);
                     msgToClient[0]='\0';
                     strcat(msgToClient, "2");
                     strcat(msgToClient, users[index_user].name);
                     strcat(msgToClient, "\t");
                     strcat(msgToClient, msgFromClient);
                     strcat(msgToClient, "\n");
-                    printf("wyslano1 %s\n", msgToClient);
                     sendMessage(cfdd, msgToClient);
-                    printf("wyslano\n");
-                    FILE *history = fopen( historyForum[users[index_user].index_forum], "a");
+                    FILE *history = fopen( historyForum[users[index_user].index_forum], "a"); //zapis wiadomosci w pliku historii
                     fprintf(history, "%s\t%s\n", users[index_user].name, msgFromClient);
                     fclose(history);
-                    
                 }
+                printf("Wyslano wiadomosc na forum\n");
                 msgFromClient[0]='\0';
                 break;
                 
             case '3':
-                printf("Opcja3\n");
+                printf("Opcja3 - Wyloguj\n");
                 //nastepuje wylogowanie z wyslaniem wiadomosci potwierdzającej klientowi
                 for(int j=0;j< forums[ users[index_user].index_forum ].countUser;j++){
                     int cfdd = forums[users[index_user].index_forum].id_users[j];
                     sendMessage(cfdd, "e\n");
                 }
-                
                 users[index_user].logged =0;
                 logged = 0;
                 index_user=-1;
                 leaveForum(index_user, c->cfd);
                 showForum();
                 sendMessage(c->cfd, "3\n");
-                
+                printf("Wylogowano\n"); 
                 break;
             case '4':
                 //utworzenie nowego serwera
                 ifCorrectName=1;
-                printf("Opcja4\n");
+                printf("Opcja4 - Utworz nowe forum\n");
                 for(int i=0;i<10;i++){
-                    printf("Dodawanie %s - %s\n",  forums[i].name, msgFromClient);
                     if( compare( forums[i].name, msgFromClient )){ //kiedy forum i podanej nazwie juz istnieje, operacja zostaje przerwana
                         ifCorrectName=0;
                         i=10;
-                        printf("jest juz  takie forum\n");
-                        sendMessage(c->cfd, "bN\n");
+                        printf("Istenieje juz  takie forum\n");
+                        sendMessage(c->cfd, "bN\n"); //informacja dla klienta o bledzie
                     }
                 }
                 if(ifCorrectName==1){ //utworzenie nowego forum wiaze sie z utworzeniem pustego pliku historii serwera oraz wpisaniem tam jego nazwy
                     for(int i=0;i<10;i++){
                         if(forums[i].name[0] == '-'){
                             FILE *history = fopen( historyForum[i], "w");
-                            sendMessage(c->cfd, "bY\n");
+                            sendMessage(c->cfd, "bY\n"); //informacja o sukcesie
                             strcpy( forums[i].name, msgFromClient);
                             fprintf(history, "%s\n", msgFromClient);
                             fclose(history);
                             i=10;
                             for(int j=0;j< forums[ users[index_user].index_forum ].countUser;j++){
                                 int cfdd = forums[users[index_user].index_forum].id_users[j];
-                                sendMessage(cfdd, "f\n");
+                                sendMessage(cfdd, "f\n"); //wysylanie klientowi informacji, by zaktualizowal liste forum poprzez wyslanie zapytania do serwera
                             }
                         }
                     }
                 }
                 showForum();
                 saveForumToFile();
-                printf("dodano\n");
+                printf("Zakończono proces dodawania forum\n");
                 break;
             case '5':
                 //usuwanie forum. Nastepuje czyszczenie pliku z historia. Wszyscy uzytkownicy są usuwani z forum
                 ifCorrectName = 0;
-                printf("Opcja5\n");
+                printf("Opcja5 - Usuwanie forum\n");
                 for(int i=0;i<10;i++){
-                    printf("< %s %s >\n", forums[i].name, msgFromClient);
                     if(compare( forums[i].name, msgFromClient)){
-                        
                         FILE *history = fopen( historyForum[i], "w");
                         strcpy( forums[i].name, "-");
-                        printf("< %d \n", forums[i].countUser);
                         for(int j=0;j<forums[i].countUser;j++){
                             //wyslanie do uzytkownikow forum informacji, ze forum przestalo istniec
                             int cfdd = forums[i].id_users[j];
@@ -390,15 +374,14 @@ void* cthread(void* arg){
                         for(int j=0;j< 10;j++){
                             for(int k=0;k< forums[j].countUser; k++){
                                 int cfdd = forums[j].id_users[k];
-                                sendMessage(cfdd, "f\n");
+                                sendMessage(cfdd, "f\n"); //by klient zaktualizowal liste forum
                             }
-                            
                         }
                         if( i == users[index_user].index_forum){
                             users[index_user].index_forum=-1;
                         }
                         fclose(history);
-                        sendMessage(c->cfd, "dY\n");
+                        sendMessage(c->cfd, "dY\n"); //informacja, ze pomyslnie usunieto forum
                         for(int j=0;j<9;j++){
                             if( users[j].index_forum == i ){
                                 users[j].index_forum = -1;   
@@ -410,15 +393,15 @@ void* cthread(void* arg){
                 }
                 if(ifCorrectName==0){
                     printf("nie ma takiego forum %d\n", i);
-                    sendMessage(c->cfd, "dN\n");
+                    sendMessage(c->cfd, "dN\n"); //informacja o bledzie
                 }
                 saveForumToFile();
                 showForum();
-                printf("usunieto\n");
+                printf("Zakończono proces usuwania forum\n");
                 break;
             case '6':
                 //wyslanie wiadomosci prywatnej do osoby zalogowanej na tym samym forum
-                printf("Opcja6\n");
+                printf("Opcja6 - Wiadomosc prywatna\n");
                 i=0;
                 msgToClient[0]='\0';
                 char* send_to;
@@ -433,14 +416,12 @@ void* cthread(void* arg){
                 strcat(msgToClient, "\n");
                 int cfdd;
                 for(int j=0; j< forums[ users[index_user].index_forum  ].countUser;j++){
-                    printf("< %s %s >\n", send_to, forums[ users[index_user].index_forum  ].username[j]);
                     if( compare( send_to,forums[ users[index_user].index_forum  ].username[j])){
                         ifCorrectName=1;
                         j=10;
-                        sendMessage(c->cfd, "cY\n");
-                        printf("weszet %s\n", msgToClient);
+                        sendMessage(c->cfd, "cY\n"); //informacja o sukcesie
                         cfdd = forums[ users[index_user].index_forum  ].id_users[j];
-                        sendMessage(cfdd, msgToClient);
+                        sendMessage(cfdd, msgToClient); //wyslanie wiadomosci na czat adresata
                     }
                 }
                 strcat(msgToClient, "2PW TO ");
@@ -448,12 +429,13 @@ void* cthread(void* arg){
                 strcat(msgToClient, "\t");
                 strcat(msgToClient, mess);
                 strcat(msgToClient, "\n");
-                sendMessage(cfdd, msgToClient);
+                sendMessage(cfdd, msgToClient); //wyslanie wiadomosci na czat nadawcy
                 
                 if(ifCorrectName==0){
-                    printf("nie ma takiego uzytkownika\n");
+                    printf("Nie ma takiego uzytkownika\n");
                     sendMessage(c->cfd, "cN\n");
                 }
+                printf("Zakończono proces prywatnej wiadomosci\n"
                 break;
             case '7':
                 //zwrocenie nazw dostepnych forów
@@ -466,10 +448,9 @@ void* cthread(void* arg){
                         strcat(msgToClient, "\t");
                     }
                 }
-                printf("forum: %s\n", msgToClient);
                 strcat(msgToClient, "\n");
                 sendMessage(c->cfd, msgToClient);
-                printf("koniec\n");
+                printf("Wyslano liste forum\n");
             
                 break;
             case '8':
@@ -481,7 +462,7 @@ void* cthread(void* arg){
                 
                 if(users[index_user].index_forum!=-1){
                     for(int i=0;i<forums[users[index_user].index_forum].countUser;i++){
-                        printf("uzytkownicy: %d=%s", forums[users[index_user].index_forum].countUser,forums[users[index_user].index_forum].username[i]);
+                        forums[users[index_user].index_forum].countUser,forums[users[index_user].index_forum].username[i]);
                         strcat(msgToClient, forums[users[index_user].index_forum].username[i]);
                         strcat(msgToClient, "\t");
                     }
@@ -491,9 +472,9 @@ void* cthread(void* arg){
                     
                     
                 }
-                printf("Wyslane: %s\n", msgToClient);
                 strcat(msgToClient, " \n");
                 sendMessage(c->cfd, msgToClient);
+                printf("Wyslano liste uzytkownikow\n");
                 break;
         }
     }
