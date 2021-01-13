@@ -289,6 +289,7 @@ namespace DayTime
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form2";
             this.Text = "Form2";
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.ForumBox.ResumeLayout(false);
             this.ForumBox.PerformLayout();
             this.userBox.ResumeLayout(false);

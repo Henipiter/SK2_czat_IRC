@@ -9,11 +9,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-/*
- * $Id: Form1.cs,v 1.1 2006/10/24 19:32:59 mkalewski Exp $
- * Okienko Logowania
- */
-
 namespace DayTime
 {
     public partial class Form1 : Form

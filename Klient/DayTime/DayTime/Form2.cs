@@ -157,7 +157,7 @@ namespace DayTime
             }
         }
 
-        private void setThreadedtextBox3Username(String text)//funkcja aktualizująca treść pola zawierającego nazwę zalogowanego urzytkownika
+        private void setThreadedtextBox3Username(String text)//funkcja aktualizująca treść pola zawierającego nazwę zalogowanego użytkownika
         {
             if (this.textBox3.InvokeRequired)
             {
@@ -277,7 +277,11 @@ namespace DayTime
                                     //mainForm.Hide();
                                     break;
                                 case 'N'://niepowodzenie
-                                    MessageBox.Show("Blad logowania");                                    
+                                    MessageBox.Show("Blad logowania");
+                                    socketFd.Shutdown(SocketShutdown.Both);
+                                    socketFd.Close();
+                                    return;
+                                    //this.Close();
                                     break;
                                 default:
                                     break;
@@ -292,7 +296,7 @@ namespace DayTime
                                     fd.Send(Buf0, Buf0.Length, 0);
                                     mess0 = 7.ToString() + "\n" + 0.ToString() + "\n" + "";
                                     Buf0 = Encoding.ASCII.GetBytes(mess0);
-                                    fd.Send(Buf0, Buf0.Length, 0);//wysłanie do serwera komunikatu o chęci odświeżenia listy urzytkowników
+                                    fd.Send(Buf0, Buf0.Length, 0);//wysłanie do serwera komunikatu o chęci odświeżenia listy użytkowników
                                     setThreadedRefreshUserButton(true);//aktualizacja  przycisków
                                     setThreadedUserWriteButton(true);
                                     setThreadedSendButton(true);
@@ -304,10 +308,10 @@ namespace DayTime
                                     break;
                             }
                             break;
-                        case 'e'://serwer informuje o zmianie na liście urzytkowników
+                        case 'e'://serwer informuje o zmianie na liście użytkowników
                             string mess1 = 8.ToString() + "\n" + 0.ToString() + "\n" + "";
                             byte[] Buf1 = Encoding.ASCII.GetBytes(mess1);
-                            fd.Send(Buf1, Buf1.Length, 0);//wysłanie do serwera komunikatu o chęci odświeżenia listy urzytkowników
+                            fd.Send(Buf1, Buf1.Length, 0);//wysłanie do serwera komunikatu o chęci odświeżenia listy użytkowników
                             break;
 
                         case 'f'://serwer informuje o zmianie na liście dostępnych forów
@@ -344,8 +348,21 @@ namespace DayTime
                         case '3'://wylogowanie
                             socketFd.Shutdown(SocketShutdown.Both);
                             socketFd.Close();
-                            this.mainForm.Show();
-                            this.Close(); 
+                            this.setThreadedtextBox4Forumname("");//czyszczenie okienek
+                            this.setThreadedUserListBox("");
+                            this.setThreadedChatbox2("");
+                            this.setThreadedForumListBox("");
+                            setThreadedRefreshUserButton(false);//blokada przycisków obsługujących forum
+                            setThreadedUserWriteButton(false);
+                            setThreadedSendButton(false);
+                            setThreadedLogoutButton1(false); 
+                            setThreadedRefreshForumButton(false); // aktualizacja przycisków
+                            setThreadedChangeForumButton(false);
+                            setThreadedAddForumButton(false);
+                            setThreadedDeleteForumButton(false);
+                            return;
+                            //this.mainForm.Show();
+                           // this.Close(); 
                                 
                             break;
                         case 'b'://case b obsługoje informację o procesie dodawania nowego forum
@@ -370,7 +387,7 @@ namespace DayTime
                                     break;
                             }
                             break;
-                        case 'a'://wysyłane do urzytkowników znajdujących się na usuniętym forum
+                        case 'a'://wysyłane do użytkowników znajdujących się na usuniętym forum
                             this.setThreadedtextBox4Forumname("");//czyszczenie okienek
                             this.setThreadedUserListBox("");
                             this.setThreadedChatbox2("");
@@ -384,7 +401,7 @@ namespace DayTime
                         case '7'://aktualizuje wyświetlaną listę dostępnych forów
                             setThreadedForumListBox(a.Substring(1));
                             break;
-                        case '8'://aktualizuje wyświetlaną listę dostępnych urzytkownikó na aktualnym forum
+                        case '8'://aktualizuje wyświetlaną listę dostępnych użytkowników na aktualnym forum
                             setThreadedUserListBox(a.Substring(1));
                             break;
                         
@@ -424,11 +441,11 @@ namespace DayTime
         private void ForumAddButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk dodawania nowego forum
         {
 
-            Form4 frm = new Form4(fd, endPoint,4);//tworzen nowego okienka w którym wpisana zostanie nazwa nowego forum
+            Form4 frm = new Form4(fd, endPoint,4);//tworzenie nowego okienka w którym wpisana zostanie nazwa nowego forum
             frm.Show();
 
         }
-        private void SendButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk wysłania wiadomości na forum
+        private void SendButton_Click(object sender, EventArgs e)//funkcja obsługująca przycisk wysyłania wiadomości na forum
         {
             SocketStateObject2 state = new SocketStateObject2();
             state.m_SocketFd = fd;
@@ -439,16 +456,14 @@ namespace DayTime
             string mess;
             mess = state.flag.ToString() + "\n" + state.msg.Length + "\n" + state.msg;
             Buf = Encoding.ASCII.GetBytes(mess);
-
-            // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
             fd.Send(Buf, Buf.Length, 0);//wysłanie do serwera
         }
 
         
 
-        private void ForumDeleteButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk ususwania forum
+        private void ForumDeleteButton_Click(object sender, EventArgs e)//funckja obsługująca przycisk usuwania forum
         {
-            Form4 frm = new Form4(fd, endPoint, 5);//tworzen nowego okienka w którym wpisana zostanie nazwa usuwanego forum
+            Form4 frm = new Form4(fd, endPoint, 5);//tworzenie nowego okienka w którym wpisana zostanie nazwa usuwanego forum
             frm.Show();
         }
 
@@ -486,7 +501,7 @@ namespace DayTime
             Buf = Encoding.ASCII.GetBytes(mess);
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.Send(Buf, Buf.Length, 0);//wysłąnie informacji do serwera o wylogowaniu
+            fd.Send(Buf, Buf.Length, 0);//wysyłanie informacji do serwera o wylogowaniu
 
         }
 
@@ -497,11 +512,11 @@ namespace DayTime
 
         private void UserWriteButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk wiadomości prywatnej
         {
-            Form3 frm = new Form3(fd, endPoint);//tworzen nowego okienka w którym wpisana zostanie nazwa urzytkownika i treść wiadomości
+            Form3 frm = new Form3(fd, endPoint);//tworzenie nowego okienka w którym wpisana zostanie nazwa użytkowników i treść wiadomości
             frm.Show();
         }
 
-        private void UserRefreshButton_Click(object sender, EventArgs e)//funcja obsługująca przycisk odświeżania listy dostępnych urzytkownów
+        private void UserRefreshButton_Click(object sender, EventArgs e)//funkcja obsługująca przycisk odświeżania listy dostępnych użytkowników
         {
 
             SocketStateObject2 state = new SocketStateObject2();
@@ -514,7 +529,7 @@ namespace DayTime
             Buf = Encoding.ASCII.GetBytes(mess);
 
             // fd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback2), state);
-            fd.Send(Buf, Buf.Length, 0); ;//wysłąnie informacji do serwera o chęci odświeżenia listy urzytkowników
+            fd.Send(Buf, Buf.Length, 0); ;//wysyłanie informacji do serwera o chęci odświeżenia listy użytkowników
         }
         public void startReceive()//funkcja rozpoczynająca odbieranie wiadomości od serwera
         {
@@ -527,7 +542,7 @@ namespace DayTime
 
         }
 
-        private void ForumChangeButton_Click(object sender, EventArgs e) //funcja obsługująca przycisk zmiany forum
+        private void ForumChangeButton_Click(object sender, EventArgs e) //funkcja obsługująca przycisk zmiany forum
         {
             Form4 frm = new Form4(fd, endPoint, 1);//tworzenie nowego okienka do wpisania nazwy forum
             this.textBox1.Text = null;//czyszczenie czatu
@@ -544,6 +559,10 @@ namespace DayTime
 
         }
 
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
     }
     public class SocketStateObject2
     {
