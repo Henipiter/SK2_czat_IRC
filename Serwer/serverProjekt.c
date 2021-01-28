@@ -49,6 +49,8 @@ void showForum(){
         }
     }
 }
+
+
 //funkcja zapisujaca liste forow
 void saveForumToFile(){
     FILE *listForum=fopen("fileForum.txt", "w");
@@ -146,51 +148,57 @@ void* cthread(void* arg){
     char flag;  //typ odbieranej wiadomosci od klienta
     int size=0;
     int i=0;
-    int password_iter, login_iter; //zmienne sluzace do zapisu loginu i hasla z wiadomosci od klienta
+    int password_iter=0, login_iter=0;; //zmienne sluzace do zapisu loginu i hasla z wiadomosci od klienta
     logged = 0;   
     struct cln* c = (struct cln*)arg;
-    //funkcja logowania
-    while(logged==0){
-        //dopoki nie odczyta dwoch znakow nowej linii; Odczytywanie znak po znaku
-        //oczekiwany ciag znakow: 
-        //     1\njeden\n
-        //   [login]\n[haslo]\n
-        while(countNewLine <2){
-            read(c->cfd, msgFromClient, 1);
-            if (countNewLine == 0 && msgFromClient[0] != '\n'){ //zapis loginu
-                login[login_iter] = msgFromClient[0];
-                login_iter++;
-            }
-            if (countNewLine == 1 && msgFromClient[0] != '\n'){ //zapis hasla
-                password[password_iter] = msgFromClient[0];
-                password_iter++;
-            }
-            if ( msgFromClient[0] == '\n'){
-                countNewLine++;
-            } 
+    
+    //etap logowania
+    
+    //dopoki nie odczyta dwoch znakow nowej linii; Odczytywanie znak po znaku
+    //oczekiwany ciag znakow: 
+    //     1\njeden\n
+    //   [login]\n[haslo]\n
+    login_iter=0;
+    password_iter=0;
+    while(countNewLine <2){
+        read(c->cfd, msgFromClient, 1);
+        printf("%s\n", msgFromClient);
+        if (countNewLine == 0 && msgFromClient[0] != '\n'){ //zapis loginu
+            login[login_iter] = msgFromClient[0];
+            login_iter++;
         }
-        //odszukanie w bazie zarejestrowanych uzytkownikow
-        for( int i=0;i<9;i++){
-            if(compare(login, users[i].name) && (users[i].logged==0)){
-                if(compare(password, users[i].password)){
-                    //gdy login i haslo sie zgadzaja
-                    users[i].logged = 1;
-                    logged=1;
-                    users[i].id = c->cfd;
-                    index_user = i;
-                    printf("Uzytkownik %s zalogowany\n", login);
-                    countNewLine=0;
-                    sendMessage(c->cfd, "0Y\n"); //wyslanie informacji zwrotnej do klienta
-                    i=9; 
-                }
-            }
+        if (countNewLine == 1 && msgFromClient[0] != '\n'){ //zapis hasla
+            password[password_iter] = msgFromClient[0];
+            password_iter++;
         }
-        if(logged==0){
-            printf("Blad logowania\n");
-            sendMessage(c->cfd, "0N\n");
-            countNewLine=0;
+        if ( msgFromClient[0] == '\n'){
+            countNewLine++;
+        } 
+    }
+    //odszukanie w bazie zarejestrowanych uzytkownikow
+    for( int i=0;i<9;i++){
+        printf("LOGOWANIE %s %s?\n",login, users[i].name );
+        if(compare(login, users[i].name) && (users[i].logged==0)){
+            if(compare(password, users[i].password)){
+                //gdy login i haslo sie zgadzaja
+                users[i].logged = 1;
+                logged=1;
+                users[i].id = c->cfd;
+                index_user = i;
+                printf("Uzytkownik %s zalogowany\n", login);
+                countNewLine=0;
+                sendMessage(c->cfd, "0Y\n"); //wyslanie informacji zwrotnej do klienta
+                i=9; 
+                
+            }
         }
     }
+    if(logged==0){
+        printf("Blad logowania\n");
+        sendMessage(c->cfd, "0N\n");
+        countNewLine=0;
+    }
+    
     //uzytkownik zalogowany:
     while(logged==1){
         countNewLine=0;
@@ -324,13 +332,12 @@ void* cthread(void* arg){
                 users[i].id = -1;
                 logged = 0;
                 index_user=-1;
-                printf("czy to t\n");
-                //leaveForum(index_user, c->cfd);
-                
-                printf("czy to ttttt\n");
+                leaveForum(index_user, c->cfd);
                 showForum();
                 sendMessage(c->cfd, "3\n");
-                printf("Wylogowano\n"); 
+                printf("Wylogowano\n");
+                
+                
                 break;
             case '4':
                 //utworzenie nowego serwera
@@ -429,18 +436,22 @@ void* cthread(void* arg){
                 for(int j=0; j< forums[ users[index_user].index_forum  ].countUser;j++){
                     if( compare( send_to,forums[ users[index_user].index_forum  ].username[j])){
                         ifCorrectName=1;
-                        j=10;
                         sendMessage(c->cfd, "cY\n"); //informacja o sukcesie
                         cfdd = forums[ users[index_user].index_forum  ].id_users[j];
                         sendMessage(cfdd, msgToClient); //wyslanie wiadomosci na czat adresata
+                        
+                        msgToClient[0]='\0';
+                        strcat(msgToClient, "2PW TO ");
+                        strcat(msgToClient, send_to);
+                        strcat(msgToClient, "\t");
+                        strcat(msgToClient, mess);
+                        strcat(msgToClient, "\n");
+                        sendMessage(c->cfd, msgToClient); //wyslanie wiadomosci na czat nadawcy
+                        
+                        
+                        j=10;
                     }
                 }
-                strcat(msgToClient, "2PW TO ");
-                strcat(msgToClient, send_to);
-                strcat(msgToClient, "\t");
-                strcat(msgToClient, mess);
-                strcat(msgToClient, "\n");
-                sendMessage(cfdd, msgToClient); //wyslanie wiadomosci na czat nadawcy
                 
                 if(ifCorrectName==0){
                     printf("Nie ma takiego uzytkownika\n");
